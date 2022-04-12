@@ -74,7 +74,7 @@ const AddClients = () => {
         <>
             <div style={{ backgroundColor: '#E2E2E2', height: '90vh' }}>
                 <br />
-                <p>Log in user is: {quote || 'No quote found'}</p>
+                <p>Logged in user is: {quote || 'No quote found'}</p>
                 <Grid>
                     <Paper elevation={10} style={{ padding: 20, width: 400, height: '80vh', margin: '20px auto' }}>
                         <Grid align='center'>
