@@ -6,12 +6,25 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import NavigateNextRoundedIcon from '@mui/icons-material/NavigateNextRounded';
 import NavigateBeforeRoundedIcon from '@mui/icons-material/NavigateBeforeRounded';
+import BookIcon from '@mui/icons-material/Book';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Stack, Button, TextField, Card, CardContent, AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Tooltip, MenuItem } from '@mui/material';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { Link } from "react-router-dom";
+import { format } from 'date-fns';
+import { formatMuiErrorMessage } from "@mui/utils";
 
 const BookingsDetail = () => {
+    /*
+var date1 = new Date("2016-01-04 10:34:23");
+var formattedDate1 = format(date1, "MMMM do, yyyy H:mma");
+//calculating no of days between two dated
+const diffDays = (date, otherDate) => Math.ceil(Math.abs(date - otherDate) / (1000 * 60 * 60 * 24));
+const total = diffDays(new Date('2016-01-04 10:34:23'), new Date('2016-01-10 10:34:23'));
+console.log(total);
+*/
+const diffDays = (date, otherDate) => Math.ceil(Math.abs(date - otherDate) / (1000 * 60 * 60 * 24));
+
     //pagination
     const [pageNumber, setPageNumber] = useState(0);
     const [numberOfPages, setNumberOfPages] = useState(0);
@@ -98,6 +111,7 @@ const BookingsDetail = () => {
                 <table class="table table-bordered">
                     <thead style={{ backgroundColor: '#677381', color: 'white' }}>
                         <tr>
+                           
                             <th scope="col">ClientName</th>
                             <th scope="col">Email</th>
                             <th scope="col">CarName</th>
@@ -106,6 +120,7 @@ const BookingsDetail = () => {
                             <th scope="col">PerDayRent</th>
                             <th scope="col">FromDate</th>
                             <th scope="col">ToDate</th>
+                            <th scope="col">TotalRent</th>
                             <th scope="col">Update / Delete</th>
                         </tr>
                     </thead>
@@ -113,14 +128,16 @@ const BookingsDetail = () => {
                         bookings.map((booking, count) => (
                             <tbody>
                                 <tr key={booking._id}>
+                                    
                                     <td >{booking.clientsId.name}</td>
                                     <td >{booking.clientsId.email}</td>
                                     <td >{booking.name}</td>
                                     <td >{booking.model}</td>
                                     <td >{booking.phone}</td>
                                     <td >{booking.perdayrent}</td>
-                                    <td >{booking.fromdate}</td>
-                                    <td >{booking.todate}</td>
+                                    <td >{format(new Date(booking.fromdate), "MMMM do, yyyy ")}</td>
+                                    <td >{format(new Date(booking.todate), "MMMM do, yyyy ")}</td>
+                                    <td >{diffDays(new Date(booking.fromdate), new Date(booking.todate))*(booking.perdayrent)}</td>
                                     <td>
                                         <Popup trigger={
                                             <Button style={{ backgroundColor: '#4169E1', color: '#FFFFFF' }} variant="contained" ><EditIcon /></Button>
@@ -217,6 +234,13 @@ const BookingsDetail = () => {
                                         </Popup>
                                         &nbsp;
                                         <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => deleteUser(booking._id)} >DELETE</Button>
+                                        &nbsp;
+                                        <Button
+
+                                            variant="outlined" startIcon={<BookIcon />}
+                                        >
+                                            <Link style={{ textDecoration: 'none' }} to={`/bookings/${id.id}`}>Booking</Link>
+                                        </Button>
                                     </td>
                                 </tr>
                             </tbody>

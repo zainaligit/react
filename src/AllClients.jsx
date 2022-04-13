@@ -13,7 +13,7 @@ import { Stack, Button, TextField, Card, CardContent, AppBar, Box, Toolbar, Icon
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { Link } from "react-router-dom";
 
-const ClientsDetail = () => {
+const AllClients = () => {
 	//pagination
 	const [pageNumber, setPageNumber] = useState(0);
 	const [numberOfPages, setNumberOfPages] = useState(0);
@@ -72,15 +72,11 @@ const ClientsDetail = () => {
 		}
 	}
 
-	//getting user id from params
-	const id = useParams()
-	console.log(id.id)
 
 	//get clients data
 	const [clients, setUsers] = useState([])
 	const fetchData = async () => {
-		let userId = id.id;
-		const response = await fetch(`http://localhost:5000/clients/${userId}/?page=${pageNumber}`);
+		const response = await fetch(`http://localhost:5000/allclients/?page=${pageNumber}`);
 		const { totalPages, clients } = await response.json();
 		setUsers(clients)
 		setNumberOfPages(totalPages);
@@ -260,4 +256,4 @@ const ClientsDetail = () => {
 	);
 }
 
-export default ClientsDetail;
+export default AllClients;

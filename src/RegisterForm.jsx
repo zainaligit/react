@@ -2,8 +2,11 @@ import React from "react";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
 //import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import { Stack, Link, Grid, Paper, Button, TextField, Card, CardContent, AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Tooltip, MenuItem } from '@mui/material';
+import { Snackbar, MuiAlert, Stack, Link, Grid, Paper, Button, TextField, Card, CardContent, AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Tooltip, MenuItem } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+//toast
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Register = () => {
 
@@ -25,8 +28,11 @@ const Register = () => {
     const postData = async (e) => {
         e.preventDefault();
         const { firstname, lastname, email, password, cpassword } = user;
-        if (user.password !== user.cpassword) {
-            alert('password are not matching')
+        if (!firstname || !lastname || !email || !password || !cpassword) {
+            toast.error('fill the fields properly');
+        }
+        else if (user.password !== user.cpassword) {
+            toast.error('password are not matching')
         }
         else {
             await fetch('http://localhost:5000/register', {
@@ -36,10 +42,10 @@ const Register = () => {
                 },
                 body: JSON.stringify({ firstname: firstname, lastname: lastname, email: email, password: password, cpassword: cpassword })
             });
-            history.push('/login')
-        }
-        if (!firstname || !lastname || !email || !password || !cpassword) {
-            alert('fill the fields properly');
+            toast.success('Signin successfully')
+            setTimeout(function () {
+                history.push('/login')
+            }, 2000);
         }
     }
 
@@ -121,6 +127,17 @@ const Register = () => {
                     </Paper>
                 </Grid>
             </div>
+            <ToastContainer
+                position="top-right"
+                autoClose={2000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
         </>
     );
 }

@@ -3,6 +3,11 @@ import { useHistory, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { FormControl, InputLabel, Stack, Link, Select, Grid, Paper, Button, TextField, Card, CardContent, AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Tooltip, MenuItem } from '@mui/material';
 import CarRentalIcon from '@mui/icons-material/CarRental';
+//toast
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
 
 
 const Booking = () => {
@@ -31,7 +36,7 @@ const Booking = () => {
         let clientsId = id.id;
         const { name, model, phone, perdayrent, fromdate, todate } = booking;
         if (!name || !model || !phone || !perdayrent || !fromdate || !todate) {
-            alert('plzz fill the fields');
+            toast.error('Fill the fields');
         }
         else {
             await fetch(`http://localhost:5000/bookings/`, {
@@ -41,7 +46,10 @@ const Booking = () => {
                 },
                 body: JSON.stringify({ name: name, model: model, phone: phone, perdayrent: perdayrent, fromdate: fromdate, todate: todate, clientsId: clientsId })
             });
-            //history.push('/bookings-detail');
+            toast.success('Successfully booked')
+            setTimeout(function() {
+                history.push('/bookingsdetail')
+              }, 2000);
         }
     }
 
@@ -148,6 +156,17 @@ const Booking = () => {
                     </Paper>
                 </Grid>
             </div>
+            <ToastContainer
+position="top-right"
+autoClose={2000}
+hideProgressBar={false}
+newestOnTop={false}
+closeOnClick
+rtl={false}
+pauseOnFocusLoss
+draggable
+pauseOnHover
+/>
         </>
     );
 }

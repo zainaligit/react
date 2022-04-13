@@ -16,10 +16,11 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { Button, TextField, Card, CardContent, AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Tooltip, MenuItem } from '@mui/material';
 import ClientsDetail from './ShowClients';
 import BookingsDetail from './ShowBookings';
+import AllClients from './AllClients';
+import AllBookings from './AllBookings';
 
-
-const pages = ['clients', 'signup', 'login'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const pages = ['clientsdetail', 'bookingsdetail', 'addclients', 'signup', 'login'];
+const settings = ['Profile'];
 
 const App = () => {
 
@@ -151,11 +152,15 @@ const App = () => {
                                     open={Boolean(anchorElUser)}
                                     onClose={handleCloseUserMenu}
                                 >
+                                {/* Appbar Profile Items / yahi pa oor links ay gy*/}
                                     {settings.map((setting) => (
                                         <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                            <Typography textAlign="center">{setting}</Typography>
+                                            <Typography textAlign="center"><Link style={{ color: 'black', textDecoration: 'none' }} to={`/${setting}`}>{setting}</Link></Typography>
                                         </MenuItem>
                                     ))}
+                                    <MenuItem onClick={handleCloseUserMenu}>
+                                        <Typography textAlign="center"><Link onClick={()=>localStorage.removeItem('token')} style={{ color: 'black', textDecoration: 'none' }} to={`/login`}>Logout</Link></Typography>
+                                    </MenuItem>
                                 </Menu>
                             </Box>
                         </Toolbar>
@@ -173,10 +178,10 @@ const App = () => {
                     <Route path='/login'>
                         <Login />
                     </Route>
-                    <Route path='/logout'>
+                    <Route path='/Logout'>
                         <Logout />
                     </Route>
-                    <Route path='/clients'>
+                    <Route path='/addclients'>
                         <AddClients />
                     </Route>
                     <Route path='/bookings/:id'>
@@ -187,6 +192,15 @@ const App = () => {
                     </Route>
                     <Route path='/bookings-detail/:id'>
                         <BookingsDetail />
+                    </Route>
+                    <Route path='/clientsdetail'>
+                        <AllClients />
+                    </Route>
+                    <Route path='/bookingsdetail'>
+                        <AllBookings />
+                    </Route>
+                    <Route path='/Logout'>
+                        <Logout />
                     </Route>
                     <Route>
                         <ErrorPage />{/* if you go on wrong address */}
