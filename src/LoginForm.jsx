@@ -2,8 +2,11 @@ import React from "react";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
 //import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import { Stack, Link, Grid, Paper, Button, TextField, Card, CardContent, AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Tooltip, MenuItem } from '@mui/material';
+import { Snackbar, Stack, Link, Grid, Paper, Button, TextField, Card, CardContent, AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Tooltip, MenuItem } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+//toast
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const Login = () => {
@@ -35,13 +38,18 @@ const Login = () => {
 
     const data = await res.json();
     if (res.status === 400 || !data) {
-      alert('invalid credentials')
+      toast.error('Invalid credentials')
     } else {
       localStorage.setItem('token', data.user)
-      alert('login successful')
-      history.push('/clients')
+      toast.success('Login successfully')
+      
+      setTimeout(function() {
+        history.push('/clientsdetail')
+      }, 2000);
+      
     }
   }
+
 
   return (
     <>
@@ -53,8 +61,8 @@ const Login = () => {
               <Avatar style={{ backgroundColor: '#4169E1' }}><AccountCircleIcon /></Avatar>
             </Grid>
             <h2 style={{ textAlign: 'center' }}>LOG IN</h2>
-            <form method="POST">
 
+            <form method="POST">
               <TextField
                 onChange={handleInput}
                 name='email'
@@ -93,6 +101,17 @@ const Login = () => {
           </Paper>
         </Grid>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </>
   );
 }

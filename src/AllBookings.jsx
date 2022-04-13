@@ -1,17 +1,30 @@
 import React, { useEffect, useState } from "react";
+import { useHistory, useParams } from "react-router-dom";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import Popup from 'reactjs-popup';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import NavigateNextRoundedIcon from '@mui/icons-material/NavigateNextRounded';
 import NavigateBeforeRoundedIcon from '@mui/icons-material/NavigateBeforeRounded';
+import BookIcon from '@mui/icons-material/Book';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Stack, Button, TextField, Card, CardContent, AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Tooltip, MenuItem } from '@mui/material';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { Link } from "react-router-dom";
+import { format } from 'date-fns';
+import { formatMuiErrorMessage } from "@mui/utils";
 
-const HomePage = () => {
+const AllBookings = () => {
+    /*
+var date1 = new Date("2016-01-04 10:34:23");
+var formattedDate1 = format(date1, "MMMM do, yyyy H:mma");
+//calculating no of days between two dated
+const diffDays = (date, otherDate) => Math.ceil(Math.abs(date - otherDate) / (1000 * 60 * 60 * 24));
+const total = diffDays(new Date('2016-01-04 10:34:23'), new Date('2016-01-10 10:34:23'));
+console.log(total);
+*/
+    const diffDays = (date, otherDate) => Math.ceil(Math.abs(date - otherDate) / (1000 * 60 * 60 * 24));
+
     //pagination
     const [pageNumber, setPageNumber] = useState(0);
     const [numberOfPages, setNumberOfPages] = useState(0);
@@ -36,31 +49,31 @@ const HomePage = () => {
         setItem({ ...item, [name]: value });
     }
 
-    //update user
+    //update booking
     const updateUser = async (id) => {
         //    alert('data updated for' + id)
-        const { firstname, lastname, email, password, cpassword } = item;
-        if (item.password !== item.cpassword) {
-            alert('password are not matching')
+        const { name, model, phone, perdayrent, fromdate, todate } = item;
+        if (!name || !model || !phone || !perdayrent || !fromdate || !todate) {
+            alert('empty data')
         }
         else {
-            await fetch(`http://localhost:5000/update/${id}`, {
+            await fetch(`http://localhost:5000/bookings/update/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ firstname: firstname, lastname: lastname, email: email, password: password, cpassword: cpassword })
+                body: JSON.stringify({ name: name, model: model, phone: phone, perdayrent: perdayrent, fromdate: fromdate, todate: todate })
             });
         }
         fetchData();
     }
 
 
-    //delete user
+    //delete booking
     const deleteUser = async (id) => {
         try {
             //alert(id)
-            const res = await fetch(`http://localhost:5000/delete/${id}`, {
+            const res = await fetch(`http://localhost:5000/bookings/delete/${id}`, {
                 method: 'DELETE'
             })
             const data = await res.json();
@@ -71,16 +84,18 @@ const HomePage = () => {
         }
     }
 
+   // const id = useParams()
+   // console.log(id.id)
 
-    //get users data
-    const [users, setUsers] = useState([])
+    //get bookings data
+    const [bookings, setUsers] = useState([])
     const fetchData = async () => {
-        const response = await fetch(`http://localhost:5000/users?page=${pageNumber}`);
-        const { totalPages, users } = await response.json();
-        setUsers(users)
+        const response = await fetch(`http://localhost:5000/allbookings/?page=${pageNumber}`);
+        const { totalPages, bookings } = await response.json();
+        setUsers(bookings)
         setNumberOfPages(totalPages);
-        console.log('data agya');
-        console.log(totalPages, users)
+        console.log('data');
+        console.log(totalPages, bookings)
     }
     useEffect(() => {
         fetchData();
@@ -95,43 +110,55 @@ const HomePage = () => {
                 <table class="table table-bordered">
                     <thead style={{ backgroundColor: '#677381', color: 'white' }}>
                         <tr>
-                        
-                            <th scope="col">FirstName</th>
-                            <th scope="col">LastName</th>
+                            
+                            <th scope="col">ClientName</th>
                             <th scope="col">Email</th>
-                            <th scope="col">Edit / Delete</th>
+                            <th scope="col">CarName</th>
+                            <th scope="col">Model</th>
+                            <th scope="col">Phone</th>
+                            <th scope="col">PerDayRent</th>
+                            <th scope="col">FromDate</th>
+                            <th scope="col">ToDate</th>
+                            <th scope="col">TotalRent</th>
+                            <th scope="col">Update / Delete</th>
                         </tr>
                     </thead>
                     {
-                        users.map((user, count) => (
+                        bookings.map((booking, count) => (
                             <tbody>
-                                <tr key={user._id}>
-                                
-                                    <td >{user.firstname}</td>
-                                    <td >{user.lastname}</td>
-                                    <td >{user.email}</td>
+                                <tr key={booking._id}>
+                                    
+                                    <td >{booking.clientsId.name}</td>
+                                    <td >{booking.clientsId.email}</td>
+                                    <td >{booking.name}</td>
+                                    <td >{booking.model}</td>
+                                    <td >{booking.phone}</td>
+                                    <td >{booking.perdayrent}</td>
+                                    <td >{format(new Date(booking.fromdate), "MMMM do, yyyy ")}</td>
+                                    <td >{format(new Date(booking.todate), "MMMM do, yyyy ")}</td>
+                                    <td >{diffDays(new Date(booking.fromdate), new Date(booking.todate)) * (booking.perdayrent)}</td>
                                     <td>
                                         <Popup trigger={
                                             <Button style={{ backgroundColor: '#4169E1', color: '#FFFFFF' }} variant="contained" ><EditIcon /></Button>
                                         }
-                                            onOpen={() => setItem(user)}
+                                            onOpen={() => setItem(booking)}
                                             position="right">
                                             <div>
                                                 <Card style={{ backgroundColor: '#F2ECFF' }} variant="outlined" sx={{ minWidth: 275 }}>
                                                     <CardContent>
                                                         <form method="PUT" onSubmit={(e) => {
                                                             e.preventDefault();
-                                                            updateUser(user._id);
+                                                            updateUser(booking._id);
                                                         }}>
                                                             <div class="mb-3">
                                                                 <TextField
                                                                     autoFocus margin="dense"
                                                                     variant="standard"
-                                                                    placeholder="FirstName"
+                                                                    placeholder="Name"
                                                                     type="text"
                                                                     onChange={handleInput}
-                                                                    name='firstname'
-                                                                    defaultValue={user.firstname}
+                                                                    name='name'
+                                                                    defaultValue={booking.name}
                                                                     class="form-control" >
 
                                                                 </TextField>
@@ -139,11 +166,11 @@ const HomePage = () => {
                                                             <div class="mb-3">
                                                                 <TextField autoFocus margin="dense"
                                                                     variant="standard"
-                                                                    placeholder="LastName"
+                                                                    placeholder="Model"
                                                                     type="text"
-                                                                    name='lastname'
+                                                                    name='model'
                                                                     onChange={handleInput}
-                                                                    defaultValue={user.lastname}
+                                                                    defaultValue={booking.model}
                                                                     class="form-control" >
 
                                                                 </TextField>
@@ -151,11 +178,11 @@ const HomePage = () => {
                                                             <div class="mb-3">
                                                                 <TextField autoFocus margin="dense"
                                                                     variant="standard"
-                                                                    placeholder="Email"
-                                                                    type="email"
-                                                                    name='email'
+                                                                    placeholder="PerDayRent"
+                                                                    type="number"
+                                                                    name='perdayrent'
                                                                     onChange={handleInput}
-                                                                    defaultValue={user.email}
+                                                                    defaultValue={booking.perdayrent}
                                                                     class="form-control"
                                                                     aria-describedby="emailHelp" >
 
@@ -164,11 +191,24 @@ const HomePage = () => {
                                                             <div class="mb-3">
                                                                 <TextField autoFocus margin="dense"
                                                                     variant="standard"
-                                                                    placeholder="Password"
-                                                                    type="password"
-                                                                    name='password'
+                                                                    placeholder="Phone"
+                                                                    type="number"
+                                                                    name='phone'
                                                                     onChange={handleInput}
-                                                                    defaultValue={user.password}
+                                                                    defaultValue={booking.phone}
+                                                                    class="form-control"
+                                                                    aria-describedby="emailHelp" >
+
+                                                                </TextField>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <TextField autoFocus margin="dense"
+                                                                    variant="standard"
+                                                                    placeholder="FromDate"
+                                                                    type="date"
+                                                                    name='fromdate'
+                                                                    onChange={handleInput}
+                                                                    defaultValue={booking.fromdate}
                                                                     class="form-control"  >
 
                                                                 </TextField>
@@ -176,11 +216,11 @@ const HomePage = () => {
                                                             <div class="mb-3">
                                                                 <TextField autoFocus margin="dense"
                                                                     variant="standard"
-                                                                    placeholder="ConfirmPassword"
-                                                                    type="password"
-                                                                    name='cpassword'
+                                                                    placeholder="ToDate"
+                                                                    type="date"
+                                                                    name='todate'
                                                                     onChange={handleInput}
-                                                                    defaultValue={user.cpassword}
+                                                                    defaultValue={booking.todate}
                                                                     class="form-control" >
 
                                                                 </TextField>
@@ -192,13 +232,8 @@ const HomePage = () => {
                                             </div>
                                         </Popup>
                                         &nbsp;
-                                        <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => deleteUser(user._id)} >DELETE</Button>
+                                        <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => deleteUser(booking._id)} >DELETE</Button>
                                         &nbsp;
-                                        <Button
-                                            variant="outlined" startIcon={<VisibilityIcon />}
-                                        >
-                                            <Link style={{ textDecoration: 'none' }} to={`/clients-detail/${user._id}`}>View-Clients</Link>
-                                        </Button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -227,4 +262,4 @@ const HomePage = () => {
     );
 }
 
-export default HomePage;
+export default AllBookings;

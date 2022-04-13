@@ -4,6 +4,9 @@ import jwt_decode from "jwt-decode";
 //import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { Stack, Link, Grid, Paper, Button, TextField, Card, CardContent, AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Tooltip, MenuItem } from '@mui/material';
 import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew';
+//toast
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AddClients = () => {
     const history = useHistory()
@@ -55,7 +58,7 @@ const AddClients = () => {
         const users = quote;
 
         if (!name || !email || !phone || !adress || !state || !city) {
-            alert('plzz fill the fields');
+            toast.error('Fill the fields');
         }
         else {
             await fetch(`http://localhost:5000/clients`, {
@@ -65,7 +68,10 @@ const AddClients = () => {
                 },
                 body: JSON.stringify({ name: name, email: email, phone: phone, adress: adress, state: state, city: city, users: users })
             });
-            //history.push('/')
+            toast.success('Client added')
+            setTimeout(function() {
+                history.push('/clientsdetail')
+              }, 2000);
         }
 
     }
@@ -74,7 +80,7 @@ const AddClients = () => {
         <>
             <div style={{ backgroundColor: '#E2E2E2', height: '90vh' }}>
                 <br />
-                <p>Logged in user is: {quote || 'No quote found'}</p>
+                <p>Logged in... {quote || 'Unknown User'}</p>
                 <Grid>
                     <Paper elevation={10} style={{ padding: 20, width: 400, height: '80vh', margin: '20px auto' }}>
                         <Grid align='center'>
@@ -156,6 +162,17 @@ const AddClients = () => {
                     </Paper>
                 </Grid>
             </div>
+            <ToastContainer
+                position="top-right"
+                autoClose={2000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
         </>
     );
 }
