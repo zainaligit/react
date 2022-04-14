@@ -35,14 +35,14 @@ const Login = () => {
       },
       body: JSON.stringify({ email: email, password: password })
     });
-
+    setUser('');
     const data = await res.json();
     if (res.status === 400 || !data) {
       toast.error('Invalid credentials')
     } else {
       localStorage.setItem('token', data.user)
       toast.success('Login successfully')
-      
+     
       setTimeout(function() {
         history.push('/clientsdetail')
       }, 2000);

@@ -1,20 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import Popup from 'reactjs-popup';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import NavigateNextRoundedIcon from '@mui/icons-material/NavigateNextRounded';
 import NavigateBeforeRoundedIcon from '@mui/icons-material/NavigateBeforeRounded';
-import BookIcon from '@mui/icons-material/Book';
-import MenuIcon from '@mui/icons-material/Menu';
-import { Stack, Button, TextField, Card, CardContent, AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Tooltip, MenuItem } from '@mui/material';
+import { Dialog, DialogActions, DialogTitle, Button, TextField, Card, CardContent} from '@mui/material';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { Link } from "react-router-dom";
 import { format } from 'date-fns';
-import { formatMuiErrorMessage } from "@mui/utils";
+//toast
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AllBookings = () => {
+    //confirm del dialog
+    const [open, setOpen] = React.useState(false);
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
     /*
 var date1 = new Date("2016-01-04 10:34:23");
 var formattedDate1 = format(date1, "MMMM do, yyyy H:mma");
@@ -78,14 +87,13 @@ console.log(total);
             })
             const data = await res.json();
             console.log(data);
+            handleClose();
+            toast.success('Successfully deleted')
             fetchData();
         } catch (error) {
             console.log(error)
         }
     }
-
-   // const id = useParams()
-   // console.log(id.id)
 
     //get bookings data
     const [bookings, setUsers] = useState([])
@@ -110,9 +118,6 @@ console.log(total);
                 <table class="table table-bordered">
                     <thead style={{ backgroundColor: '#677381', color: 'white' }}>
                         <tr>
-                            
-                            <th scope="col">ClientName</th>
-                            <th scope="col">Email</th>
                             <th scope="col">CarName</th>
                             <th scope="col">Model</th>
                             <th scope="col">Phone</th>
@@ -124,12 +129,9 @@ console.log(total);
                         </tr>
                     </thead>
                     {
-                        bookings.map((booking, count) => (
+                        bookings.map((booking) => (
                             <tbody>
                                 <tr key={booking._id}>
-                                    
-                                    <td >{booking.clientsId.name}</td>
-                                    <td >{booking.clientsId.email}</td>
                                     <td >{booking.name}</td>
                                     <td >{booking.model}</td>
                                     <td >{booking.phone}</td>
@@ -232,8 +234,23 @@ console.log(total);
                                             </div>
                                         </Popup>
                                         &nbsp;
-                                        <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => deleteUser(booking._id)} >DELETE</Button>
-                                        &nbsp;
+                                        <Button style={{ color: 'red' }} variant="outlined" startIcon={<DeleteIcon style={{ color: 'red' }} />} onClick={handleClickOpen}>
+                                            Delete
+                                        </Button>
+                                        <Dialog
+                                            open={open}
+                                            onClose={handleClose}
+                                            aria-labelledby="alert-dialog-title"
+                                            aria-describedby="alert-dialog-description"
+                                        >
+                                            <DialogTitle id="alert-dialog-title">
+                                                {"Do you want to delete this entry?"}
+                                            </DialogTitle>
+                                            <DialogActions>
+                                                <Button onClick={handleClose}>Disagree</Button>
+                                                <Button onClick={() => deleteUser(booking._id)} style={{ color: 'red' }} autoFocus>Agree</Button>
+                                            </DialogActions>
+                                        </Dialog>
                                     </td>
                                 </tr>
                             </tbody>
@@ -258,6 +275,17 @@ console.log(total);
                     {/* Pagination Controller*/}
                 </div>
             </div>
+            <ToastContainer
+                position="top-right"
+                autoClose={2000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
         </>
     );
 }

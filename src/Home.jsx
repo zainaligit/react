@@ -7,11 +7,26 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import NavigateNextRoundedIcon from '@mui/icons-material/NavigateNextRounded';
 import NavigateBeforeRoundedIcon from '@mui/icons-material/NavigateBeforeRounded';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Stack, Button, TextField, Card, CardContent, AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Tooltip, MenuItem } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, TextField, Card, CardContent, AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Tooltip, MenuItem } from '@mui/material';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { Link } from "react-router-dom";
+//toast
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const HomePage = () => {
+    //confirm del dialog
+    const [open, setOpen] = React.useState(false);
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+
     //pagination
     const [pageNumber, setPageNumber] = useState(0);
     const [numberOfPages, setNumberOfPages] = useState(0);
@@ -65,6 +80,8 @@ const HomePage = () => {
             })
             const data = await res.json();
             console.log(data);
+            handleClose();
+            toast.success('Successfully deleted')
             fetchData();
         } catch (error) {
             console.log(error)
@@ -95,7 +112,7 @@ const HomePage = () => {
                 <table class="table table-bordered">
                     <thead style={{ backgroundColor: '#677381', color: 'white' }}>
                         <tr>
-                        
+
                             <th scope="col">FirstName</th>
                             <th scope="col">LastName</th>
                             <th scope="col">Email</th>
@@ -106,7 +123,7 @@ const HomePage = () => {
                         users.map((user, count) => (
                             <tbody>
                                 <tr key={user._id}>
-                                
+
                                     <td >{user.firstname}</td>
                                     <td >{user.lastname}</td>
                                     <td >{user.email}</td>
@@ -192,13 +209,30 @@ const HomePage = () => {
                                             </div>
                                         </Popup>
                                         &nbsp;
-                                        <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => deleteUser(user._id)} >DELETE</Button>
+                                        <Button style={{ color: 'red' }} variant="outlined" startIcon={<DeleteIcon style={{ color: 'red' }} />} onClick={handleClickOpen}>
+                                            Delete
+                                        </Button>
+                                        <Dialog
+                                            open={open}
+                                            onClose={handleClose}
+                                            aria-labelledby="alert-dialog-title"
+                                            aria-describedby="alert-dialog-description"
+                                        >
+                                            <DialogTitle id="alert-dialog-title">
+                                                {"Do you want to delete this entry?"}
+                                            </DialogTitle>
+                                            <DialogActions>
+                                                <Button onClick={handleClose}>Disagree</Button>
+                                                <Button onClick={()=>deleteUser(user._id)} style={{ color: 'red' }} autoFocus>Agree</Button>
+                                            </DialogActions>
+                                        </Dialog>
                                         &nbsp;
                                         <Button
                                             variant="outlined" startIcon={<VisibilityIcon />}
                                         >
                                             <Link style={{ textDecoration: 'none' }} to={`/clients-detail/${user._id}`}>View-Clients</Link>
                                         </Button>
+                                        
                                     </td>
                                 </tr>
                             </tbody>
@@ -223,6 +257,17 @@ const HomePage = () => {
                     {/* Pagination Controller*/}
                 </div>
             </div>
+            <ToastContainer
+                position="top-right"
+                autoClose={2000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
         </>
     );
 }

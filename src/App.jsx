@@ -13,7 +13,7 @@ import Logout from './Logout';
 import AddClients from './Clients';
 import Booking from './CarBooking';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Button, TextField, Card, CardContent, AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Tooltip, MenuItem } from '@mui/material';
+import { Button, AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Tooltip, MenuItem } from '@mui/material';
 import ClientsDetail from './ShowClients';
 import BookingsDetail from './ShowBookings';
 import AllClients from './AllClients';
@@ -197,7 +197,7 @@ const App = () => {
                         <AllClients />
                     </Route>
                     <Route path='/bookingsdetail'>
-                        <AllBookings />
+                        <AllBookings/>
                     </Route>
                     <Route path='/Logout'>
                         <Logout />

@@ -68,6 +68,7 @@ const AddClients = () => {
                 },
                 body: JSON.stringify({ name: name, email: email, phone: phone, adress: adress, state: state, city: city, users: users })
             });
+            setClient('');
             toast.success('Client added')
             setTimeout(function() {
                 history.push('/clientsdetail')
