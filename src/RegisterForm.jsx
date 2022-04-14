@@ -42,6 +42,7 @@ const Register = () => {
                 },
                 body: JSON.stringify({ firstname: firstname, lastname: lastname, email: email, password: password, cpassword: cpassword })
             });
+            setUser('');
             toast.success('Signin successfully')
             setTimeout(function () {
                 history.push('/login')

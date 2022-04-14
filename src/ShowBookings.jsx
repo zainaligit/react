@@ -8,13 +8,25 @@ import NavigateNextRoundedIcon from '@mui/icons-material/NavigateNextRounded';
 import NavigateBeforeRoundedIcon from '@mui/icons-material/NavigateBeforeRounded';
 import BookIcon from '@mui/icons-material/Book';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Stack, Button, TextField, Card, CardContent, AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Tooltip, MenuItem } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, TextField, Card, CardContent, AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Tooltip, MenuItem } from '@mui/material';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { Link } from "react-router-dom";
 import { format } from 'date-fns';
-import { formatMuiErrorMessage } from "@mui/utils";
+//toast
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const BookingsDetail = () => {
+    //confirm del dialog
+    const [open, setOpen] = React.useState(false);
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
     /*
 var date1 = new Date("2016-01-04 10:34:23");
 var formattedDate1 = format(date1, "MMMM do, yyyy H:mma");
@@ -78,6 +90,8 @@ const diffDays = (date, otherDate) => Math.ceil(Math.abs(date - otherDate) / (10
             })
             const data = await res.json();
             console.log(data);
+            handleClose();
+            toast.success('Successfully deleted')
             fetchData();
         } catch (error) {
             console.log(error)
@@ -233,7 +247,24 @@ const diffDays = (date, otherDate) => Math.ceil(Math.abs(date - otherDate) / (10
                                             </div>
                                         </Popup>
                                         &nbsp;
-                                        <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => deleteUser(booking._id)} >DELETE</Button>
+										<Button style={{ color: 'red' }} variant="outlined" startIcon={<DeleteIcon style={{ color: 'red' }} />} onClick={handleClickOpen}>
+                                            Delete
+                                        </Button>
+                                        <Dialog
+                                            open={open}
+                                            onClose={handleClose}
+                                            aria-labelledby="alert-dialog-title"
+                                            aria-describedby="alert-dialog-description"
+                                        >
+                                            <DialogTitle id="alert-dialog-title">
+                                                {"Do you want to delete this entry?"}
+                                            </DialogTitle>
+                                            <DialogActions>
+                                                <Button onClick={handleClose}>Disagree</Button>
+                                                <Button onClick={()=>deleteUser(booking._id)} style={{ color: 'red' }} autoFocus>Agree</Button>
+                                            </DialogActions>
+                                        </Dialog>
+
                                         &nbsp;
                                         <Button
 
@@ -265,6 +296,17 @@ const diffDays = (date, otherDate) => Math.ceil(Math.abs(date - otherDate) / (10
                     {/* Pagination Controller*/}
                 </div>
             </div>
+            <ToastContainer
+                position="top-right"
+                autoClose={2000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
         </>
     );
 }

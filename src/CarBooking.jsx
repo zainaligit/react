@@ -46,6 +46,7 @@ const Booking = () => {
                 },
                 body: JSON.stringify({ name: name, model: model, phone: phone, perdayrent: perdayrent, fromdate: fromdate, todate: todate, clientsId: clientsId })
             });
+            setBooking('');
             toast.success('Successfully booked')
             setTimeout(function() {
                 history.push('/bookingsdetail')
