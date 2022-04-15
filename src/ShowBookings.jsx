@@ -278,7 +278,7 @@ const diffDays = (date, otherDate) => Math.ceil(Math.abs(date - otherDate) / (10
                         ))
                     }
                 </table>
-                <br />
+                
                 <br />
                 {/* Pagination Controller*/}
                 <div style={{ textAlign: 'center' }}>

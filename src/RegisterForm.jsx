@@ -1,8 +1,14 @@
 import React from "react";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link
+} from "react-router-dom";
 //import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import { Snackbar, MuiAlert, Stack, Link, Grid, Paper, Button, TextField, Card, CardContent, AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Tooltip, MenuItem } from '@mui/material';
+import { Snackbar, MuiAlert, Stack, Grid, Paper, Button, TextField, Card, CardContent, AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Tooltip, MenuItem } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 //toast
 import { ToastContainer, toast } from 'react-toastify';
@@ -44,9 +50,10 @@ const Register = () => {
             });
             setUser('');
             toast.success('Signin successfully')
+            
             setTimeout(function () {
                 history.push('/login')
-            }, 2000);
+            }, 1000);
         }
     }
 
@@ -122,7 +129,7 @@ const Register = () => {
                             </Button>
                             <hr />
                             <Typography>Do you have an account?
-                                &nbsp;<Link href='#'>LogIn</Link>
+                                &nbsp;<Link to='/login'>Login</Link>
                             </Typography>
                         </form>
                     </Paper>
@@ -130,7 +137,7 @@ const Register = () => {
             </div>
             <ToastContainer
                 position="top-right"
-                autoClose={2000}
+                autoClose={1000}
                 hideProgressBar={false}
                 newestOnTop={false}
                 closeOnClick

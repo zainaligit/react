@@ -265,7 +265,7 @@ const AllClients = () => {
 						))
 					}
 				</table>
-				<br />
+				
 				<br />
 				{/* Pagination Controller*/}
 				<div style={{ textAlign: 'center' }}>

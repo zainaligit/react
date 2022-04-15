@@ -1,15 +1,22 @@
-import React from "react";
+import React, { useContext } from "react";
+import { UserContext } from "./App";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
 //import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import { Snackbar, Stack, Link, Grid, Paper, Button, TextField, Card, CardContent, AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Tooltip, MenuItem } from '@mui/material';
+import { Snackbar, Stack, Grid, Paper, Button, TextField, Card, CardContent, AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Tooltip, MenuItem } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 //toast
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-
 const Login = () => {
+  const { state, dispatch } = useContext(UserContext);
 
   const history = useHistory();
   const [user, setUser] = useState({
@@ -40,17 +47,16 @@ const Login = () => {
     if (res.status === 400 || !data) {
       toast.error('Invalid credentials')
     } else {
+      dispatch({ type: "USER", payload: true })
       localStorage.setItem('token', data.user)
       toast.success('Login successfully')
-     
-      setTimeout(function() {
-        history.push('/clientsdetail')
+/*
+      setTimeout(function () {
+        history.push('/bookingsdetail');
       }, 2000);
-      
+*/
     }
   }
-
-
   return (
     <>
       <div style={{ backgroundColor: '#E2E2E2', height: '90vh' }}>
@@ -90,12 +96,12 @@ const Login = () => {
                 type="submit"
                 style={{ width: "350px", margin: "5px" }}
               >
-                Sign in
+                <Link style={{ color: 'white', textDecoration: 'none' }} to="/">Login</Link>
               </Button>
               <hr />
               <Link href='#'> Forgot password?</Link>
               <Typography>Do you have an account?
-                &nbsp;<Link href='#'>SignUp</Link>
+                &nbsp;<Link to='/signup'>SignUp</Link>
               </Typography>
             </form>
           </Paper>
@@ -103,7 +109,7 @@ const Login = () => {
       </div>
       <ToastContainer
         position="top-right"
-        autoClose={2000}
+        autoClose={1000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

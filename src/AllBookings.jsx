@@ -257,7 +257,7 @@ console.log(total);
                         ))
                     }
                 </table>
-                <br />
+                
                 <br />
                 {/* Pagination Controller*/}
                 <div style={{ textAlign: 'center' }}>

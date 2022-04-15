@@ -50,7 +50,7 @@ const Booking = () => {
             toast.success('Successfully booked')
             setTimeout(function() {
                 history.push('/bookingsdetail')
-              }, 2000);
+              }, 1000);
         }
     }
 
@@ -159,7 +159,7 @@ const Booking = () => {
             </div>
             <ToastContainer
 position="top-right"
-autoClose={2000}
+autoClose={1000}
 hideProgressBar={false}
 newestOnTop={false}
 closeOnClick

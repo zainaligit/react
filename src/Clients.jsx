@@ -70,9 +70,10 @@ const AddClients = () => {
             });
             setClient('');
             toast.success('Client added')
+            
             setTimeout(function() {
                 history.push('/clientsdetail')
-              }, 2000);
+              }, 1000);
         }
 
     }
@@ -81,7 +82,7 @@ const AddClients = () => {
         <>
             <div style={{ backgroundColor: '#E2E2E2', height: '90vh' }}>
                 <br />
-                <p>Logged in... {quote || 'Unknown User'}</p>
+                <p>{/**Logged in... {quote || 'Unknown User'} */}</p>
                 <Grid>
                     <Paper elevation={10} style={{ padding: 20, width: 400, height: '80vh', margin: '20px auto' }}>
                         <Grid align='center'>
@@ -165,7 +166,7 @@ const AddClients = () => {
             </div>
             <ToastContainer
                 position="top-right"
-                autoClose={2000}
+                autoClose={1000}
                 hideProgressBar={false}
                 newestOnTop={false}
                 closeOnClick
