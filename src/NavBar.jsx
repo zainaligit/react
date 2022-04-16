@@ -1,5 +1,4 @@
-import React, { createContext, useContext, useReducer } from 'react';
-import { useHistory } from "react-router-dom";
+import React, {  useContext} from 'react';
 import {
     BrowserRouter as Router,
     Switch,
@@ -23,10 +22,10 @@ import AllBookings from './AllBookings';
 import { UserContext } from './App';
 
 //after login
-const pages = ['clientsdetail', 'bookingsdetail', 'addclients'];
+//const pages = ['clientsdetail', 'bookingsdetail', 'addclients'];
 const settings = ['Profile'];
 //before login
-const hiddenpages = ['signup', 'login'];
+//const hiddenpages = ['signup', 'login'];
 //const hiddensettings = ['Profile'];
 
 const NavBar = () => {
@@ -38,9 +37,7 @@ const NavBar = () => {
         dispatch({ type: "USER", payload: false })
     }
 
-
     const RenderMenu = () => {
-        const history = useHistory();
 
         const [anchorElNav, setAnchorElNav] = React.useState(null);
         const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -76,7 +73,7 @@ const NavBar = () => {
                                         component="div"
                                         sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
                                     >
-                                        <img style={{width:40}}
+                                        <img style={{ width: 40 }}
                                             src="https://lh4.googleusercontent.com/t7ytj3VN0AQfbzrgY_a_Oii2NWyq7X-kCYkF6qv-vgewjxefvX77ci_E_DPsH4CSpTcolfkJ3w5dYJI6z7FtClO2rZxyi3tHwJU7fDexJTVjYsxd9y8sL7wAcgM2zB9YfdqTmFYn"
                                             alt="new"
                                         />
@@ -203,12 +200,6 @@ const NavBar = () => {
                         <Switch>
                             <Route exact path='/'>
                                 <HomePage />
-                            </Route>
-                            <Route path="/signup">
-                                <Register />
-                            </Route>
-                            <Route path='/login'>
-                                <Login />
                             </Route>
                             <Route path='/addclients'>
                                 <AddClients />
