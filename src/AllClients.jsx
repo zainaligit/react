@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import Popup from 'reactjs-popup';
 import EditIcon from '@mui/icons-material/Edit';
@@ -8,8 +7,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import DeleteIcon from '@mui/icons-material/Delete';
 import NavigateNextRoundedIcon from '@mui/icons-material/NavigateNextRounded';
 import NavigateBeforeRoundedIcon from '@mui/icons-material/NavigateBeforeRounded';
-import MenuIcon from '@mui/icons-material/Menu';
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, TextField, Card, CardContent, AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Tooltip, MenuItem } from '@mui/material';
+import { Dialog, DialogActions, DialogTitle, Button, TextField, Card, CardContent } from '@mui/material';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { Link } from "react-router-dom";
 //toast
@@ -168,7 +166,6 @@ const AllClients = () => {
 																	onChange={handleInput}
 																	defaultValue={client.email}
 																	class="form-control" >
-
 																</TextField>
 															</div>
 															<div class="mb-3">
