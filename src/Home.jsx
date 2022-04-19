@@ -1,21 +1,49 @@
 import React, { useEffect, useState } from "react";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import Popup from 'reactjs-popup';
+//import Popup from 'reactjs-popup';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import NavigateNextRoundedIcon from '@mui/icons-material/NavigateNextRounded';
 import NavigateBeforeRoundedIcon from '@mui/icons-material/NavigateBeforeRounded';
-import MenuIcon from '@mui/icons-material/Menu';
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, TextField, Card, CardContent, AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Tooltip, MenuItem } from '@mui/material';
+import { Dialog, DialogActions,DialogTitle, Button } from '@mui/material';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { Link } from "react-router-dom";
 //toast
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import UpdateUserDialog from "./EditUser";
 
 const HomePage = () => {
+    //Edit Dialog
+    const [editopen, setEditOpen] = React.useState(false);
+    const [selectedValue, setSelectedValue] = React.useState();
+
+//popup form handleinput
+const [item, setItem] = useState({
+    firstname: '', lastname: '', email: '', password: '', cpassword: ''
+});
+
+let name, value;
+const handleInput = (e) => {
+    name = e.target.name;
+    value = e.target.value;
+    setItem({ ...item, [name]: value });
+}
+
+    const handleEditClickOpen = (value) => {
+        setEditOpen(true);
+        //console.log('user ki value ' + value.firstname)
+        setSelectedValue(value)
+        //populating updateform
+        setItem(value)
+    };
+
+    const handleEditClose = () => {
+        setEditOpen(false);
+        fetchData()
+    };
+
     //confirm del dialog
     const [open, setOpen] = React.useState(false);
     const handleClickOpen = () => {
@@ -25,7 +53,6 @@ const HomePage = () => {
     const handleClose = () => {
         setOpen(false);
     };
-
 
     //pagination
     const [pageNumber, setPageNumber] = useState(0);
@@ -38,38 +65,6 @@ const HomePage = () => {
     const gotoNext = () => {
         setPageNumber(Math.min(numberOfPages - 1, pageNumber + 1));
     };
-
-    //popup form handleinput
-    const [item, setItem] = useState({
-        firstname: '', lastname: '', email: '', password: '', cpassword: ''
-    });
-
-    let name, value;
-    const handleInput = (e) => {
-        name = e.target.name;
-        value = e.target.value;
-        setItem({ ...item, [name]: value });
-    }
-
-    //update user
-    const updateUser = async (id) => {
-        //    alert('data updated for' + id)
-        const { firstname, lastname, email, password, cpassword } = item;
-        if (item.password !== item.cpassword) {
-            alert('password are not matching')
-        }
-        else {
-            await fetch(`http://localhost:5000/update/${id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ firstname: firstname, lastname: lastname, email: email, password: password, cpassword: cpassword })
-            });
-        }
-        fetchData();
-    }
-
 
     //delete user
     const deleteUser = async (id) => {
@@ -120,94 +115,14 @@ const HomePage = () => {
                         </tr>
                     </thead>
                     {
-                        users.map((user, count) => (
+                        users.map((user) => (
                             <tbody>
                                 <tr key={user._id}>
-
                                     <td >{user.firstname}</td>
                                     <td >{user.lastname}</td>
                                     <td >{user.email}</td>
                                     <td>
-                                        <Popup trigger={
-                                            <Button style={{ backgroundColor: '#4169E1', color: '#FFFFFF' }} variant="contained" ><EditIcon /></Button>
-                                        }
-                                            onOpen={() => setItem(user)}
-                                            position="right">
-                                            <div>
-                                                <Card style={{ backgroundColor: '#F2ECFF' }} variant="outlined" sx={{ minWidth: 275 }}>
-                                                    <CardContent>
-                                                        <form method="PUT" onSubmit={(e) => {
-                                                            e.preventDefault();
-                                                            updateUser(user._id);
-                                                        }}>
-                                                            <div class="mb-3">
-                                                                <TextField
-                                                                    autoFocus margin="dense"
-                                                                    variant="standard"
-                                                                    placeholder="FirstName"
-                                                                    type="text"
-                                                                    onChange={handleInput}
-                                                                    name='firstname'
-                                                                    defaultValue={user.firstname}
-                                                                    class="form-control" >
-
-                                                                </TextField>
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <TextField autoFocus margin="dense"
-                                                                    variant="standard"
-                                                                    placeholder="LastName"
-                                                                    type="text"
-                                                                    name='lastname'
-                                                                    onChange={handleInput}
-                                                                    defaultValue={user.lastname}
-                                                                    class="form-control" >
-
-                                                                </TextField>
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <TextField autoFocus margin="dense"
-                                                                    variant="standard"
-                                                                    placeholder="Email"
-                                                                    type="email"
-                                                                    name='email'
-                                                                    onChange={handleInput}
-                                                                    defaultValue={user.email}
-                                                                    class="form-control"
-                                                                    aria-describedby="emailHelp" >
-
-                                                                </TextField>
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <TextField autoFocus margin="dense"
-                                                                    variant="standard"
-                                                                    placeholder="Password"
-                                                                    type="password"
-                                                                    name='password'
-                                                                    onChange={handleInput}
-                                                                    defaultValue={user.password}
-                                                                    class="form-control"  >
-
-                                                                </TextField>
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <TextField autoFocus margin="dense"
-                                                                    variant="standard"
-                                                                    placeholder="ConfirmPassword"
-                                                                    type="password"
-                                                                    name='cpassword'
-                                                                    onChange={handleInput}
-                                                                    defaultValue={user.cpassword}
-                                                                    class="form-control" >
-
-                                                                </TextField>
-                                                            </div>
-                                                            <Button style={{ backgroundColor: '#4169E1', color: 'white' }} variant="contained" type="submit" class="btn btn-primary" >Update</Button>
-                                                        </form>
-                                                    </CardContent>
-                                                </Card>
-                                            </div>
-                                        </Popup>
+                                        <Button onClick={() => handleEditClickOpen(user)} style={{ backgroundColor: '#4169E1', color: '#FFFFFF' }} variant="contained" ><EditIcon /></Button>
                                         &nbsp;
                                         <Button style={{ color: 'red' }} variant="outlined" startIcon={<DeleteIcon style={{ color: 'red' }} />} onClick={handleClickOpen}>
                                             Delete
@@ -223,7 +138,7 @@ const HomePage = () => {
                                             </DialogTitle>
                                             <DialogActions>
                                                 <Button onClick={handleClose}>Disagree</Button>
-                                                <Button onClick={()=>deleteUser(user._id)} style={{ color: 'red' }} autoFocus>Agree</Button>
+                                                <Button onClick={() => deleteUser(user._id)} style={{ color: 'red' }} autoFocus>Agree</Button>
                                             </DialogActions>
                                         </Dialog>
                                         &nbsp;
@@ -232,14 +147,14 @@ const HomePage = () => {
                                         >
                                             <Link style={{ textDecoration: 'none' }} to={`/clients-detail/${user._id}`}>View-Clients</Link>
                                         </Button>
-                                        
+
                                     </td>
                                 </tr>
                             </tbody>
                         ))
                     }
                 </table>
-                
+
                 <br />
                 {/* Pagination Controller*/}
                 <div style={{ textAlign: 'center' }}>
@@ -267,6 +182,13 @@ const HomePage = () => {
                 pauseOnFocusLoss
                 draggable
                 pauseOnHover
+            />
+            <UpdateUserDialog
+                selectedValue={selectedValue}
+                open={editopen}
+                onClose={handleEditClose}
+                item={item}
+                handleInput={handleInput}
             />
         </>
     );

@@ -7,16 +7,44 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import NavigateNextRoundedIcon from '@mui/icons-material/NavigateNextRounded';
 import NavigateBeforeRoundedIcon from '@mui/icons-material/NavigateBeforeRounded';
 import BookIcon from '@mui/icons-material/Book';
-import MenuIcon from '@mui/icons-material/Menu';
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, TextField, Card, CardContent, AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Tooltip, MenuItem } from '@mui/material';
+import { Dialog, DialogActions, DialogTitle, Button, } from '@mui/material';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { Link } from "react-router-dom";
 import { format } from 'date-fns';
 //toast
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import UpdateDialog from "./EditBooking";
 
 const BookingsDetail = () => {
+    //Edit Booking Dialog
+    const [editopen, setEditOpen] = React.useState(false);
+    const [selectedValue, setSelectedValue] = React.useState();
+        //popup updatebooking form handleinput
+        const [item, setItem] = useState({
+            name: '', model: '', perdayrent: '', phone: '', fromdate: '', todate: ''
+        });
+    
+        let name, value;
+        const handleInput = (e) => {
+            name = e.target.name;
+            value = e.target.value;
+            setItem({ ...item, [name]: value });
+        }
+
+        const handleEditClickOpen = (value) => {
+            setEditOpen(true);
+            //console.log('booking ki value ' + value)
+            setSelectedValue(value)
+            //populating updateform
+            setItem(value)
+        };
+    
+        const handleEditClose = (value) => {
+            setEditOpen(false);
+            fetchData()
+        };
+
     //confirm del dialog
     const [open, setOpen] = React.useState(false);
     const handleClickOpen = () => {
@@ -35,7 +63,7 @@ const diffDays = (date, otherDate) => Math.ceil(Math.abs(date - otherDate) / (10
 const total = diffDays(new Date('2016-01-04 10:34:23'), new Date('2016-01-10 10:34:23'));
 console.log(total);
 */
-const diffDays = (date, otherDate) => Math.ceil(Math.abs(date - otherDate) / (1000 * 60 * 60 * 24));
+    const diffDays = (date, otherDate) => Math.ceil(Math.abs(date - otherDate) / (1000 * 60 * 60 * 24));
 
     //pagination
     const [pageNumber, setPageNumber] = useState(0);
@@ -48,38 +76,6 @@ const diffDays = (date, otherDate) => Math.ceil(Math.abs(date - otherDate) / (10
     const gotoNext = () => {
         setPageNumber(Math.min(numberOfPages - 1, pageNumber + 1));
     };
-
-    //popup form handleinput
-    const [item, setItem] = useState({
-        firstname: '', lastname: '', email: '', password: '', cpassword: ''
-    });
-
-    let name, value;
-    const handleInput = (e) => {
-        name = e.target.name;
-        value = e.target.value;
-        setItem({ ...item, [name]: value });
-    }
-
-    //update booking
-    const updateUser = async (id) => {
-        //    alert('data updated for' + id)
-        const { name, model, phone, perdayrent, fromdate, todate } = item;
-        if (!name || !model || !phone || !perdayrent || !fromdate || !todate) {
-            alert('empty data')
-        }
-        else {
-            await fetch(`http://localhost:5000/bookings/update/${id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ name: name, model: model, phone: phone, perdayrent: perdayrent, fromdate: fromdate, todate: todate })
-            });
-        }
-        fetchData();
-    }
-
 
     //delete booking
     const deleteUser = async (id) => {
@@ -125,7 +121,7 @@ const diffDays = (date, otherDate) => Math.ceil(Math.abs(date - otherDate) / (10
                 <table class="table table-bordered">
                     <thead style={{ backgroundColor: '#677381', color: 'white' }}>
                         <tr>
-                           
+
                             <th scope="col">ClientName</th>
                             <th scope="col">Email</th>
                             <th scope="col">CarName</th>
@@ -142,7 +138,7 @@ const diffDays = (date, otherDate) => Math.ceil(Math.abs(date - otherDate) / (10
                         bookings.map((booking, count) => (
                             <tbody>
                                 <tr key={booking._id}>
-                                    
+
                                     <td >{booking.clientsId.name}</td>
                                     <td >{booking.clientsId.email}</td>
                                     <td >{booking.name}</td>
@@ -151,103 +147,11 @@ const diffDays = (date, otherDate) => Math.ceil(Math.abs(date - otherDate) / (10
                                     <td >{booking.perdayrent}</td>
                                     <td >{format(new Date(booking.fromdate), "MMMM do, yyyy ")}</td>
                                     <td >{format(new Date(booking.todate), "MMMM do, yyyy ")}</td>
-                                    <td >{diffDays(new Date(booking.fromdate), new Date(booking.todate))*(booking.perdayrent)}</td>
+                                    <td >{diffDays(new Date(booking.fromdate), new Date(booking.todate)) * (booking.perdayrent)}</td>
                                     <td>
-                                        <Popup trigger={
-                                            <Button style={{ backgroundColor: '#4169E1', color: '#FFFFFF' }} variant="contained" ><EditIcon /></Button>
-                                        }
-                                            onOpen={() => setItem(booking)}
-                                            position="right">
-                                            <div>
-                                                <Card style={{ backgroundColor: '#F2ECFF' }} variant="outlined" sx={{ minWidth: 275 }}>
-                                                    <CardContent>
-                                                        <form method="PUT" onSubmit={(e) => {
-                                                            e.preventDefault();
-                                                            updateUser(booking._id);
-                                                        }}>
-                                                            <div class="mb-3">
-                                                                <TextField
-                                                                    autoFocus margin="dense"
-                                                                    variant="standard"
-                                                                    placeholder="Name"
-                                                                    type="text"
-                                                                    onChange={handleInput}
-                                                                    name='name'
-                                                                    defaultValue={booking.name}
-                                                                    class="form-control" >
-
-                                                                </TextField>
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <TextField autoFocus margin="dense"
-                                                                    variant="standard"
-                                                                    placeholder="Model"
-                                                                    type="text"
-                                                                    name='model'
-                                                                    onChange={handleInput}
-                                                                    defaultValue={booking.model}
-                                                                    class="form-control" >
-
-                                                                </TextField>
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <TextField autoFocus margin="dense"
-                                                                    variant="standard"
-                                                                    placeholder="PerDayRent"
-                                                                    type="number"
-                                                                    name='perdayrent'
-                                                                    onChange={handleInput}
-                                                                    defaultValue={booking.perdayrent}
-                                                                    class="form-control"
-                                                                    aria-describedby="emailHelp" >
-
-                                                                </TextField>
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <TextField autoFocus margin="dense"
-                                                                    variant="standard"
-                                                                    placeholder="Phone"
-                                                                    type="number"
-                                                                    name='phone'
-                                                                    onChange={handleInput}
-                                                                    defaultValue={booking.phone}
-                                                                    class="form-control"
-                                                                    aria-describedby="emailHelp" >
-
-                                                                </TextField>
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <TextField autoFocus margin="dense"
-                                                                    variant="standard"
-                                                                    placeholder="FromDate"
-                                                                    type="date"
-                                                                    name='fromdate'
-                                                                    onChange={handleInput}
-                                                                    defaultValue={booking.fromdate}
-                                                                    class="form-control"  >
-
-                                                                </TextField>
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <TextField autoFocus margin="dense"
-                                                                    variant="standard"
-                                                                    placeholder="ToDate"
-                                                                    type="date"
-                                                                    name='todate'
-                                                                    onChange={handleInput}
-                                                                    defaultValue={booking.todate}
-                                                                    class="form-control" >
-
-                                                                </TextField>
-                                                            </div>
-                                                            <Button style={{ backgroundColor: '#4169E1', color: 'white' }} variant="contained" type="submit" class="btn btn-primary" >Update</Button>
-                                                        </form>
-                                                    </CardContent>
-                                                </Card>
-                                            </div>
-                                        </Popup>
+                                        <Button onClick={() => handleEditClickOpen(booking)} style={{ backgroundColor: '#4169E1', color: '#FFFFFF' }} variant="contained" ><EditIcon /></Button>
                                         &nbsp;
-										<Button style={{ color: 'red' }} variant="outlined" startIcon={<DeleteIcon style={{ color: 'red' }} />} onClick={handleClickOpen}>
+                                        <Button style={{ color: 'red' }} variant="outlined" startIcon={<DeleteIcon style={{ color: 'red' }} />} onClick={handleClickOpen}>
                                             Delete
                                         </Button>
                                         <Dialog
@@ -261,7 +165,7 @@ const diffDays = (date, otherDate) => Math.ceil(Math.abs(date - otherDate) / (10
                                             </DialogTitle>
                                             <DialogActions>
                                                 <Button onClick={handleClose}>Disagree</Button>
-                                                <Button onClick={()=>deleteUser(booking._id)} style={{ color: 'red' }} autoFocus>Agree</Button>
+                                                <Button onClick={() => deleteUser(booking._id)} style={{ color: 'red' }} autoFocus>Agree</Button>
                                             </DialogActions>
                                         </Dialog>
 
@@ -278,7 +182,7 @@ const diffDays = (date, otherDate) => Math.ceil(Math.abs(date - otherDate) / (10
                         ))
                     }
                 </table>
-                
+
                 <br />
                 {/* Pagination Controller*/}
                 <div style={{ textAlign: 'center' }}>
@@ -306,6 +210,13 @@ const diffDays = (date, otherDate) => Math.ceil(Math.abs(date - otherDate) / (10
                 pauseOnFocusLoss
                 draggable
                 pauseOnHover
+            />
+            <UpdateDialog
+                selectedValue={selectedValue}
+                open={editopen}
+                onClose={handleEditClose}
+                item={item}
+                handleInput={handleInput}
             />
         </>
     );

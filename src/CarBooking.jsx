@@ -48,9 +48,9 @@ const Booking = () => {
             });
             setBooking('');
             toast.success('Successfully booked')
-            setTimeout(function() {
+            setTimeout(function () {
                 history.push('/bookingsdetail')
-              }, 1000);
+            }, 1000);
         }
     }
 
@@ -158,16 +158,16 @@ const Booking = () => {
                 </Grid>
             </div>
             <ToastContainer
-position="top-right"
-autoClose={1000}
-hideProgressBar={false}
-newestOnTop={false}
-closeOnClick
-rtl={false}
-pauseOnFocusLoss
-draggable
-pauseOnHover
-/>
+                position="top-right"
+                autoClose={1000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
         </>
     );
 }
