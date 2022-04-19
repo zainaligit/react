@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 import Dialog from '@mui/material/Dialog';
 import { DialogActions } from '@mui/material';
 import { FormControl, InputLabel, Select, Paper, Button, TextField, MenuItem } from '@mui/material';
+//toast
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function UpdateDialog(props) {
 
@@ -28,6 +31,7 @@ function UpdateDialog(props) {
             });
         }
         handleClose();
+        toast.success('Updated successfully')
     }
 
     return (

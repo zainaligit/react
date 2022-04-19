@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 import Dialog from '@mui/material/Dialog';
 import { DialogActions } from '@mui/material';
 import { Paper, Button, TextField } from '@mui/material';
+//toast
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function UpdateClientDialog(props) {
 
@@ -28,6 +31,7 @@ function UpdateClientDialog(props) {
             });
         }
         handleClose();
+        toast.success('Updated successfully')
     }
 
     return (
