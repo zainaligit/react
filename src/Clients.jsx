@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 //import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import { Stack, Link, Grid, Paper, Button, TextField, Card, CardContent, AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Tooltip, MenuItem } from '@mui/material';
+import { Grid, Paper, Button, TextField, Avatar } from '@mui/material';
 import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew';
 //toast
 import { ToastContainer, toast } from 'react-toastify';
@@ -10,7 +10,6 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const AddClients = () => {
     const history = useHistory()
-
     const [quote, setQuote] = useState('')
 
     async function populateQuote() {
@@ -38,14 +37,12 @@ const AddClients = () => {
         }
     }, [])
 
-
     const [client, setClient] = useState({
-        name: '', email: '', phone: '', adress: '', state: '', city: '', users: ''
+        name: '', email:'', phone: '', adress: '', state: '', city: '', users: ''
     });
 
     let name, value;
     const handleInput = (e) => {
-
         name = e.target.name;
         value = e.target.value;
 
@@ -70,9 +67,10 @@ const AddClients = () => {
             });
             setClient('');
             toast.success('Client added')
+            
             setTimeout(function() {
                 history.push('/clientsdetail')
-              }, 2000);
+              }, 1000);
         }
 
     }
@@ -81,15 +79,16 @@ const AddClients = () => {
         <>
             <div style={{ backgroundColor: '#E2E2E2', height: '90vh' }}>
                 <br />
-                <p>Logged in... {quote || 'Unknown User'}</p>
+                <p>{/**Logged in... {quote || 'Unknown User'} */}</p>
                 <Grid>
                     <Paper elevation={10} style={{ padding: 20, width: 400, height: '80vh', margin: '20px auto' }}>
                         <Grid align='center'>
                             <Avatar style={{ backgroundColor: '#4169E1' }}><AccessibilityNewIcon /></Avatar>
                         </Grid>
                         <h2 style={{ textAlign: 'center' }}>ADD CLIENTS</h2>
-                        <form method="POST">
+                        <form method="POST" >
                             <TextField
+                            required
                                 onChange={handleInput}
                                 name='name'
                                 value={client.name}
@@ -100,26 +99,30 @@ const AddClients = () => {
                             />
                             <br />
                             <TextField
+                            required
                                 onChange={handleInput}
                                 name='email'
                                 value={client.email}
                                 style={{ width: "350px", margin: "5px" }}
                                 type="email"
                                 label="Email"
-                                variant="outlined"
+                                variant="outlined" 
                             />
                             <br />
                             <TextField
+                            required
                                 onChange={handleInput}
                                 name='phone'
                                 value={client.phone}
                                 style={{ width: "350px", margin: "5px" }}
-                                type="number"
+                                type="phone"
                                 label="Phone"
                                 variant="outlined"
+                            
                             />
                             <br />
                             <TextField
+                            required
                                 onChange={handleInput}
                                 name='adress'
                                 value={client.adress}
@@ -130,6 +133,7 @@ const AddClients = () => {
                             />
                             <br />
                             <TextField
+                            required
                                 onChange={handleInput}
                                 name='state'
                                 value={client.state}
@@ -140,6 +144,7 @@ const AddClients = () => {
                             />
                             <br />
                             <TextField
+                            required
                                 onChange={handleInput}
                                 name='city'
                                 value={client.city}
@@ -165,7 +170,7 @@ const AddClients = () => {
             </div>
             <ToastContainer
                 position="top-right"
-                autoClose={2000}
+                autoClose={1000}
                 hideProgressBar={false}
                 newestOnTop={false}
                 closeOnClick
