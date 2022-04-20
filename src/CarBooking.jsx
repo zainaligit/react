@@ -1,7 +1,7 @@
 import React from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { FormControl, InputLabel, Select, Grid, Paper, Button, TextField,  Avatar, MenuItem } from '@mui/material';
+import { FormControl, InputLabel, Select, Grid, Paper, Button, TextField, Avatar, MenuItem } from '@mui/material';
 import CarRentalIcon from '@mui/icons-material/CarRental';
 //toast
 import { ToastContainer, toast } from 'react-toastify';
