@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { UserContext } from "./App";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
@@ -16,6 +16,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
+  //context Api
   const { state, dispatch } = useContext(UserContext);
 
   const history = useHistory();
@@ -32,6 +33,52 @@ const Login = () => {
     setUser({ ...user, [name]: value });
   }
 
+  
+    //form validation
+    const [validation, setValidation] = useState({
+      email: "",
+      password: ""
+    });
+    const checkValidation = () => {
+      let errors = validation;
+  
+      // email validation
+      const emailCond = "[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$";
+      if (!user.email.trim()) {
+        errors.email = "Email is required";
+      } else if (!user.email.match(emailCond)) {
+        errors.email = "Please enter a valid email address";
+      } else {
+        errors.email = "";
+      }
+  
+      //password validation
+      const cond1 = "/^(?=.*[a-z]).{6,20}$/";
+      const cond2 = "/^(?=.*[A-Z]).{6,20}$/";
+      const cond3 = "/^(?=.*[0-9]).{6,20}$/";
+      const password = user.password;
+      if (!password) {
+        errors.password = "password is required";
+      } else if (password.length < 6) {
+        errors.password = "Password must be longer than 6 characters";
+      } else if (password.length >= 20) {
+        errors.password = "Password must shorter than 20 characters";
+      }  else if (!password.match(cond2)) {
+        errors.password = "Password must contain at least one capital letter";
+      } else if (!password.match(cond3)) {
+        errors.password = "Password must contain at least a number";
+      } else {
+        errors.password = "";
+      }
+  
+      setValidation(errors);
+    };
+  
+    useEffect(() => {
+      checkValidation();
+    }, [user]);
+    
+//
   const loginUser = async (e) => {
     e.preventDefault();
     const { email, password } = user;
@@ -42,7 +89,6 @@ const Login = () => {
       },
       body: JSON.stringify({ email: email, password: password })
     });
-    setUser('');
     const data = await res.json();
     if (res.status === 400 || !data) {
       toast.error('Invalid credentials')
@@ -50,6 +96,7 @@ const Login = () => {
       dispatch({ type: "USER", payload: true })
       localStorage.setItem('token', data.user)
       toast.success('Login successfully')
+      setUser('');
 /*
       setTimeout(function () {
         history.push('/bookingsdetail');
@@ -62,7 +109,7 @@ const Login = () => {
       <div style={{ backgroundColor: '#E2E2E2', height: '90vh' }}>
         <br />
         <Grid>
-          <Paper elevation={10} style={{ padding: 20, width: 400, height: '53vh', margin: '20px auto' }}>
+          <Paper elevation={10} style={{ padding: 20, width: 400, height: '65vh', margin: '20px auto' }}>
             <Grid align='center'>
               <Avatar style={{ backgroundColor: '#4169E1' }}><AccountCircleIcon /></Avatar>
             </Grid>
@@ -77,8 +124,9 @@ const Login = () => {
                 type="email"
                 label="Email"
                 variant="outlined"
+                required
               />
-              <br />
+              {validation.email && <p>&nbsp;{validation.email}</p>}
               <TextField
                 onChange={handleInput}
                 name='password'
@@ -87,8 +135,9 @@ const Login = () => {
                 type="password"
                 label="Password"
                 variant="outlined"
+                required
               />
-              <br />
+             {validation.password && <p>&nbsp;{validation.password}</p>}
               <Button
                 onClick={loginUser}
                 variant="contained"

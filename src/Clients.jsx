@@ -38,7 +38,7 @@ const AddClients = () => {
     }, [])
 
     const [client, setClient] = useState({
-        name: '', email:'', phone: '', adress: '', state: '', city: '', users: ''
+        name: '', email: '', phone: '', adress: '', state: '', city: '', users: ''
     });
 
     let name, value;
@@ -47,6 +47,7 @@ const AddClients = () => {
         value = e.target.value;
 
         setClient({ ...client, [name]: value });
+        checkValidation();
     }
 
     const postData = async (e) => {
@@ -65,30 +66,66 @@ const AddClients = () => {
                 },
                 body: JSON.stringify({ name: name, email: email, phone: phone, adress: adress, state: state, city: city, users: users })
             });
-            setClient('');
-            toast.success('Client added')
             
-            setTimeout(function() {
+            toast.success('Client added')
+            setClient('');
+
+            setTimeout(function () {
                 history.push('/clientsdetail')
-              }, 1000);
+            }, 1000);
         }
 
     }
 
+    //form validation
+    const [validation, setValidation] = useState({
+        email: "",
+        phone: ""
+    });
+    const checkValidation = () => {
+        let errors = validation;
+
+        // email validation
+        const emailCond = "[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$";
+        if (!client.email.trim()) {
+            errors.email = "Email is required";
+        } else if (!client.email.match(emailCond)) {
+            errors.email = "Please enter a valid email address";
+        } else {
+            errors.email = '';
+        }
+
+        //phone validation
+        var phone = '1234567890';
+        if( !client.phone.match('[0-9]{10}') ){
+             errors.phone = 'Please provide valid phone number';
+        }else{
+             errors.phone = '';
+        }
+
+        setValidation(errors);
+    };
+/*
+    useEffect(() => {
+        checkValidation();
+    }, [client]);
+*/
+    //
+
     return (
         <>
-            <div style={{ backgroundColor: '#E2E2E2', height: '90vh' }}>
+            <div style={{ backgroundColor: '#E2E2E2', height: '100vh' }}>
                 <br />
                 <p>{/**Logged in... {quote || 'Unknown User'} */}</p>
                 <Grid>
-                    <Paper elevation={10} style={{ padding: 20, width: 400, height: '80vh', margin: '20px auto' }}>
+                    <Paper elevation={10} style={{ padding: 20, width: 400, height: '90vh', margin: '20px auto' }}>
                         <Grid align='center'>
                             <Avatar style={{ backgroundColor: '#4169E1' }}><AccessibilityNewIcon /></Avatar>
                         </Grid>
                         <h2 style={{ textAlign: 'center' }}>ADD CLIENTS</h2>
                         <form method="POST" >
                             <TextField
-                            required
+                                required
                                 onChange={handleInput}
                                 name='name'
                                 value={client.name}
@@ -99,18 +136,18 @@ const AddClients = () => {
                             />
                             <br />
                             <TextField
-                            required
+                                required
                                 onChange={handleInput}
                                 name='email'
                                 value={client.email}
                                 style={{ width: "350px", margin: "5px" }}
                                 type="email"
                                 label="Email"
-                                variant="outlined" 
+                                variant="outlined"
                             />
-                            <br />
+                           {validation.email && <p>&nbsp;{validation.email}</p>}
                             <TextField
-                            required
+                                required
                                 onChange={handleInput}
                                 name='phone'
                                 value={client.phone}
@@ -118,11 +155,11 @@ const AddClients = () => {
                                 type="phone"
                                 label="Phone"
                                 variant="outlined"
-                            
+                                placeholder="+92--------"
                             />
-                            <br />
+                            {validation.phone && <p>&nbsp;{validation.phone}</p>}
                             <TextField
-                            required
+                                required
                                 onChange={handleInput}
                                 name='adress'
                                 value={client.adress}
@@ -133,7 +170,7 @@ const AddClients = () => {
                             />
                             <br />
                             <TextField
-                            required
+                                required
                                 onChange={handleInput}
                                 name='state'
                                 value={client.state}
@@ -144,7 +181,7 @@ const AddClients = () => {
                             />
                             <br />
                             <TextField
-                            required
+                                required
                                 onChange={handleInput}
                                 name='city'
                                 value={client.city}

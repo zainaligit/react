@@ -1,13 +1,11 @@
 import React from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { FormControl, InputLabel, Stack, Link, Select, Grid, Paper, Button, TextField, Card, CardContent, AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Tooltip, MenuItem } from '@mui/material';
+import { FormControl, InputLabel, Select, Grid, Paper, Button, TextField,  Avatar, MenuItem } from '@mui/material';
 import CarRentalIcon from '@mui/icons-material/CarRental';
 //toast
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-
 
 
 const Booking = () => {
@@ -25,7 +23,32 @@ const Booking = () => {
         value = e.target.value;
 
         setBooking({ ...booking, [name]: value });
+        checkValidation();
     }
+
+    //form validation
+    const [validation, setValidation] = useState({
+        phone: "",
+    });
+    const checkValidation = () => {
+        let errors = validation;
+
+        //phone validation
+        var phone = '1234567890';
+        if (!booking.phone.match('[0-9]{10}')) {
+            errors.phone = 'Please provide valid phone number';
+        } else {
+            errors.phone = '';
+        }
+
+        setValidation(errors);
+    };
+    /*
+    useEffect(() => {
+        checkValidation();
+    }, [client]);
+*/
+    //
 
     //send client id for booking
     const id = useParams()
@@ -56,10 +79,10 @@ const Booking = () => {
 
     return (
         <>
-            <div style={{ backgroundColor: '#E2E2E2', height: '90vh' }}>
+            <div style={{ backgroundColor: '#E2E2E2', height: '100vh' }}>
                 <br />
                 <Grid>
-                    <Paper elevation={10} style={{ padding: 20, width: 400, height: '85vh', margin: '20px auto' }}>
+                    <Paper elevation={10} style={{ padding: 20, width: 400, height: '92vh', margin: '20px auto' }}>
                         <Grid align='center'>
                             <Avatar style={{ backgroundColor: '#4169E1' }}><CarRentalIcon /></Avatar>
                         </Grid>
@@ -121,8 +144,9 @@ const Booking = () => {
                                 type="text"
                                 label="Phone"
                                 variant="outlined"
+                                placeholder="+92---------"
                             />
-                            <br />
+                            {validation.phone && <p>&nbsp;{validation.phone}</p>}
                             <label style={{ width: "350px", margin: "5px" }}>FromDate</label>
                             <TextField
                                 onChange={handleInput}

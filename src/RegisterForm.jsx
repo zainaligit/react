@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import {
     BrowserRouter as Router,
@@ -8,7 +8,7 @@ import {
     Link
 } from "react-router-dom";
 //import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import { Snackbar, MuiAlert, Stack, Grid, Paper, Button, TextField, Card, CardContent, AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Tooltip, MenuItem } from '@mui/material';
+import {  Grid, Paper, Button, TextField,  Typography,  Avatar } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 //toast
 import { ToastContainer, toast } from 'react-toastify';
@@ -29,7 +29,55 @@ const Register = () => {
         value = e.target.value;
 
         setUser({ ...user, [name]: value });
+        checkValidation();
     }
+
+    //form validation
+    const [validation, setValidation] = useState({
+        email: "",
+        password: ""
+      });
+      const checkValidation = () => {
+        let errors = validation;
+    
+        // email validation
+        const emailCond = "[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$";
+        if (!user.email.trim()) {
+          errors.email = "Email is required";
+        } else if (!user.email.match(emailCond)) {
+          errors.email = "Please enter a valid email address";
+        } else {
+          errors.email = "";
+        }
+    
+        //password validation
+        const cond1 = "/^(?=.*[a-z]).{6,20}$/";
+        const cond2 = "/^(?=.*[A-Z]).{6,20}$/";
+        const cond3 = "/^(?=.*[0-9]).{6,20}$/";
+        const password = user.password;
+        if (!password) {
+          errors.password = "password is required";
+        } else if (password.length < 6) {
+          errors.password = "Password must be longer than 6 characters";
+        } else if (password.length >= 20) {
+          errors.password = "Password must shorter than 20 characters";
+        }  else if (!password.match(cond2)) {
+          errors.password = "Password must contain at least one capital letter";
+        } else if (!password.match(cond3)) {
+          errors.password = "Password must contain at least a number";
+        } else {
+          errors.password = "";
+        }
+    
+        setValidation(errors);
+      };
+
+    /*
+      useEffect(() => {
+        checkValidation();
+      }, [user]);
+     */ 
+  //
 
     const postData = async (e) => {
         e.preventDefault();
@@ -59,10 +107,10 @@ const Register = () => {
 
     return (
         <>
-            <div style={{ backgroundColor: '#E2E2E2', height: '90vh' }}>
+            <div style={{ backgroundColor: '#E2E2E2', height: '100vh' }}>
                 <br />
                 <Grid>
-                    <Paper elevation={10} style={{ padding: 20, width: 400, height: '76vh', margin: '20px auto' }}>
+                    <Paper elevation={10} style={{ padding: 20, width: 400, height: '86vh', margin: '20px auto' }}>
                         <Grid align='center'>
                             <Avatar style={{ backgroundColor: '#4169E1' }}><AccountCircleIcon /></Avatar>
                         </Grid>
@@ -97,7 +145,7 @@ const Register = () => {
                                 label="Email"
                                 variant="outlined"
                             />
-                            <br />
+                            {validation.email && <p>&nbsp;{validation.email}</p>}
                             <TextField
                                 onChange={handleInput}
                                 name='password'
@@ -107,7 +155,7 @@ const Register = () => {
                                 label="Password"
                                 variant="outlined"
                             />
-                            <br />
+                            {validation.password && <p>&nbsp;{validation.password}</p>}
                             <TextField
                                 onChange={handleInput}
                                 name='cpassword'
