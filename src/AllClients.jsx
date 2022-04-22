@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import Popup from 'reactjs-popup';
 import EditIcon from '@mui/icons-material/Edit';
-import BookIcon from '@mui/icons-material/Book';
+import AddBoxIcon from '@mui/icons-material/AddBox';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import DeleteIcon from '@mui/icons-material/Delete';
 import NavigateNextRoundedIcon from '@mui/icons-material/NavigateNextRounded';
 import NavigateBeforeRoundedIcon from '@mui/icons-material/NavigateBeforeRounded';
-import { Dialog, DialogActions, DialogTitle, Button, TextField, Card, CardContent } from '@mui/material';
+import { Dialog, DialogActions, DialogTitle, Button, Paper } from '@mui/material';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { Link } from "react-router-dom";
 //toast
@@ -103,8 +102,10 @@ const AllClients = () => {
 	return (
 
 		<>
-			<div style={{ backgroundColor: '#E2E2E2', height: '90vh' }}>
+			<div style={{ height: '85vh' }}>
 				{/* Page# header <h5 style={{textAlign:'center'}}>PAGE # {pageNumber + 1}</h5> */}
+				<Paper elevation={2}>
+				<h1 style={{textAlign:'center'}}>All Clients</h1>
 				<table class="table table-bordered">
 					<thead style={{ backgroundColor: '#677381', color: 'white' }}>
 						<tr>
@@ -115,7 +116,7 @@ const AllClients = () => {
 							<th scope="col">Adress</th>
 							<th scope="col">State</th>
 							<th scope="col">City</th>
-							<th scope="col">Update / Delete</th>
+							<th scope="col">Operations</th>
 
 						</tr>
 					</thead>
@@ -131,11 +132,11 @@ const AllClients = () => {
 									<td >{client.state}</td>
 									<td >{client.city}</td>
 									<td>
-										<Button onClick={() => handleEditClickOpen(client)} style={{ backgroundColor: '#4169E1', color: '#FFFFFF' }} variant="contained" ><EditIcon /></Button>
+										<Link onClick={() => handleEditClickOpen(client)} style={{ color: 'black' }} ><EditIcon /></Link>
 										&nbsp;
-										<Button style={{ color: 'red' }} variant="outlined" startIcon={<DeleteIcon style={{ color: 'red' }} />} onClick={handleClickOpen}>
-											Delete
-										</Button>
+										<Link style={{ color: 'red' }} onClick={handleClickOpen}>
+											<DeleteIcon/>
+										</Link>
 										<Dialog
 											open={open}
 											onClose={handleClose}
@@ -151,18 +152,9 @@ const AllClients = () => {
 											</DialogActions>
 										</Dialog>
 										&nbsp;
-										<Button
-
-											variant="outlined" startIcon={<BookIcon />}
-										>
-											<Link style={{ textDecoration: 'none' }} to={`/bookings/${client._id}`}>Booking</Link>
-										</Button>
+											<Link style={{ color:'black' }} to={`/bookings/${client._id}`}><AddBoxIcon/></Link>
 										&nbsp;
-										<Button
-											variant="outlined" startIcon={<VisibilityIcon />}
-										>
-											<Link style={{ textDecoration: 'none' }} to={`/bookings-detail/${client._id}`}>View-Bookings</Link>
-										</Button>
+											<Link style={{ color:'blue' }} to={`/bookings-detail/${client._id}`}><VisibilityIcon/></Link>							
 									</td>
 
 								</tr>
@@ -171,23 +163,23 @@ const AllClients = () => {
 						))
 					}
 				</table>
-
-				<br />
+				</Paper>
+				
+			</div>
+			{/* Pagination Controller*/}
+			<div style={{ textAlign: 'center' }}>
+				{/* Pagination <Button style={{ backgroundColor: '#4169E1' }} variant="contained" size="small" onClick={gotoPrevious}><NavigateBeforeRoundedIcon /></Button> */}
+				<Link onClick={gotoPrevious}><NavigateBeforeRoundedIcon /></Link>
+				&nbsp;
+				{pages.map((pageIndex) => (
+					<Button size="small" variant="outlined" style={{ color: 'black', backgroundColor: '#DADDE2', borderRadius: '50%', fontWeight: 'bold', margin: '2px' }} key={pageIndex} onClick={() => setPageNumber(pageIndex)}>
+						{pageIndex + 1}
+					</Button>
+				))}
+				&nbsp;
+				{/* Pagination  <Button style={{ backgroundColor: '#4169E1' }} variant="contained" size="small" onClick={gotoNext}><NavigateNextRoundedIcon /></Button> */}
+				<Link onClick={gotoNext}><NavigateNextRoundedIcon /></Link>
 				{/* Pagination Controller*/}
-				<div style={{ textAlign: 'center' }}>
-					{/* Pagination <Button style={{ backgroundColor: '#4169E1' }} variant="contained" size="small" onClick={gotoPrevious}><NavigateBeforeRoundedIcon /></Button> */}
-					<Link onClick={gotoPrevious}><NavigateBeforeRoundedIcon /></Link>
-					&nbsp;
-					{pages.map((pageIndex) => (
-						<Button size="small" variant="outlined" style={{ color: 'white', backgroundColor: '#677381', borderRadius: 10, fontWeight: 'bold', margin: '2px' }} key={pageIndex} onClick={() => setPageNumber(pageIndex)}>
-							{pageIndex + 1}
-						</Button>
-					))}
-					&nbsp;
-					{/* Pagination  <Button style={{ backgroundColor: '#4169E1' }} variant="contained" size="small" onClick={gotoNext}><NavigateNextRoundedIcon /></Button> */}
-					<Link onClick={gotoNext}><NavigateNextRoundedIcon /></Link>
-					{/* Pagination Controller*/}
-				</div>
 			</div>
 			<ToastContainer
 				position="top-right"

@@ -6,6 +6,7 @@ import {
     Link
 } from "react-router-dom";
 import MenuIcon from '@mui/icons-material/Menu';
+import LogoutIcon from '@mui/icons-material/Logout';
 import { Button, AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Tooltip, MenuItem } from '@mui/material';
 import HomePage from './Home';
 import ErrorPage from './ErrorPage';
@@ -159,40 +160,8 @@ const NavBar = () => {
 
                                         {/* Appbar Button Items / yahi pa oor links ay gy*/}
                                     </Box>
-
-                                    <Box sx={{ flexGrow: 0 }}>
-                                        <Tooltip title="Open settings">
-                                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-                                            </IconButton>
-                                        </Tooltip>
-                                        <Menu
-                                            sx={{ mt: '45px' }}
-                                            id="menu-appbar"
-                                            anchorEl={anchorElUser}
-                                            anchorOrigin={{
-                                                vertical: 'top',
-                                                horizontal: 'right',
-                                            }}
-                                            keepMounted
-                                            transformOrigin={{
-                                                vertical: 'top',
-                                                horizontal: 'right',
-                                            }}
-                                            open={Boolean(anchorElUser)}
-                                            onClose={handleCloseUserMenu}
-                                        >
-                                            {/* Appbar Profile Items / yahi pa oor links ay gy*/}
-                                            {settings.map((setting) => (
-                                                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                                    <Typography textAlign="center"><Link style={{ color: 'black', textDecoration: 'none' }} to={`/${setting}`}>{setting}</Link></Typography>
-                                                </MenuItem>
-                                            ))}
-                                            <MenuItem onClick={handleCloseUserMenu}>
-                                                <Typography textAlign="center"><Link onClick={logoutUser} style={{ color: 'black', textDecoration: 'none' }} to={`/login`}>Logout</Link></Typography>
-                                            </MenuItem>
-                                        </Menu>
-                                    </Box>
+                                    <Link onClick={logoutUser} style={{ color: '#E8A392', textDecoration: 'none' }} to={`/login`}><LogoutIcon fontSize = 'small'/></Link>
+                                    
                                 </Toolbar>
                             </Container>
                         </AppBar>

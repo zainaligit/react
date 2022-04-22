@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 //import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { Grid, Paper, Button, TextField, Avatar } from '@mui/material';
 import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew';
+import CancelIcon from '@mui/icons-material/Cancel';
 //toast
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -119,6 +121,7 @@ const AddClients = () => {
                 <p>{/**Logged in... {quote || 'Unknown User'} */}</p>
                 <Grid>
                     <Paper elevation={10} style={{ padding: 20, width: 400, height: '90vh', margin: '20px auto' }}>
+                    <div style={{textAlign:'right'}} ><Link style={{ color:'red' }} to={`/`}><CancelIcon/></Link></div>
                         <Grid align='center'>
                             <Avatar style={{ backgroundColor: '#4169E1' }}><AccessibilityNewIcon /></Avatar>
                         </Grid>

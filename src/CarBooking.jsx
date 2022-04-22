@@ -1,8 +1,10 @@
 import React from "react";
 import { useHistory, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { FormControl, InputLabel, Select, Grid, Paper, Button, TextField, Avatar, MenuItem } from '@mui/material';
 import CarRentalIcon from '@mui/icons-material/CarRental';
+import CancelIcon from '@mui/icons-material/Cancel';
 //toast
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -82,7 +84,8 @@ const Booking = () => {
             <div style={{ backgroundColor: '#E2E2E2', height: '100vh' }}>
                 <br />
                 <Grid>
-                    <Paper elevation={10} style={{ padding: 20, width: 400, height: '92vh', margin: '20px auto' }}>
+                    <Paper elevation={10} style={{ padding: 20, width: 400, height: '94vh', margin: '20px auto' }}>
+                    <div style={{textAlign:'right'}} ><Link style={{ color:'red' }} to={`/`}><CancelIcon/></Link></div>
                         <Grid align='center'>
                             <Avatar style={{ backgroundColor: '#4169E1' }}><CarRentalIcon /></Avatar>
                         </Grid>

@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import EditIcon from '@mui/icons-material/Edit';
-import BookIcon from '@mui/icons-material/Book';
+import AddBoxIcon from '@mui/icons-material/AddBox';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import DeleteIcon from '@mui/icons-material/Delete';
 import NavigateNextRoundedIcon from '@mui/icons-material/NavigateNextRounded';
 import NavigateBeforeRoundedIcon from '@mui/icons-material/NavigateBeforeRounded';
-import { Dialog, DialogActions, DialogTitle, Button } from '@mui/material';
+import { Dialog, DialogActions, DialogTitle, Button, Paper } from '@mui/material';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { Link } from "react-router-dom";
 //toast
@@ -108,96 +108,88 @@ const ClientsDetail = () => {
 	return (
 
 		<>
-			<div style={{ backgroundColor: '#E2E2E2', height: '90vh' }}>
+			<div style={{ height: '85vh' }}>
 				{/* Page# header <h5 style={{textAlign:'center'}}>PAGE # {pageNumber + 1}</h5> */}
-				<table class="table table-bordered">
-					<thead style={{ backgroundColor: '#677381', color: 'white' }}>
-						<tr>
+				<Paper elevation={2}>
+				<h1 style={{textAlign:'center'}}>Specific Clients</h1>
+					<table class="table table-bordered">
+						<thead style={{ backgroundColor: '#677381', color: 'white' }}>
+							<tr>
 
-							<th scope="col">Name</th>
-							<th scope="col">Email</th>
-							<th scope="col">Phone</th>
-							<th scope="col">Adress</th>
-							<th scope="col">State</th>
-							<th scope="col">City</th>
-							<th scope="col">Update / Delete</th>
+								<th scope="col">Name</th>
+								<th scope="col">Email</th>
+								<th scope="col">Phone</th>
+								<th scope="col">Adress</th>
+								<th scope="col">State</th>
+								<th scope="col">City</th>
+								<th scope="col">Operations</th>
 
-						</tr>
-					</thead>
-					{
-						clients.map((client, count) => (
-							<tbody>
-								<tr key={client._id}>
+							</tr>
+						</thead>
+						{
+							clients.map((client, count) => (
+								<tbody>
+									<tr key={client._id}>
 
-									<td >{client.name}</td>
-									<td >{client.email}</td>
-									<td >{client.phone}</td>
-									<td >{client.adress}</td>
-									<td >{client.state}</td>
-									<td >{client.city}</td>
-									<td>
-										<Button onClick={() => handleEditClickOpen(client)} style={{ backgroundColor: '#4169E1', color: '#FFFFFF' }} variant="contained" ><EditIcon /></Button>
-										&nbsp;
-										<Button style={{ color: 'red' }} variant="outlined" startIcon={<DeleteIcon style={{ color: 'red' }} />} onClick={handleClickOpen}>
-											Delete
-										</Button>
-										<Dialog
-											open={open}
-											onClose={handleClose}
-											aria-labelledby="alert-dialog-title"
-											aria-describedby="alert-dialog-description"
-										>
-											<DialogTitle id="alert-dialog-title">
-												{"Do you want to delete this entry?"}
-											</DialogTitle>
-											<DialogActions>
-												<Button onClick={handleClose}>Disagree</Button>
-												<Button onClick={() => deleteUser(client._id)} style={{ color: 'red' }} autoFocus>Agree</Button>
-											</DialogActions>
-										</Dialog>
+										<td >{client.name}</td>
+										<td >{client.email}</td>
+										<td >{client.phone}</td>
+										<td >{client.adress}</td>
+										<td >{client.state}</td>
+										<td >{client.city}</td>
+										<td>
+											<Link onClick={() => handleEditClickOpen(client)} style={{ color: 'black' }} ><EditIcon /></Link>
+											&nbsp;
+											<Link style={{ color: 'red' }} onClick={handleClickOpen}>
+												<DeleteIcon/>
+											</Link>
+											<Dialog
+												open={open}
+												onClose={handleClose}
+												aria-labelledby="alert-dialog-title"
+												aria-describedby="alert-dialog-description"
+											>
+												<DialogTitle id="alert-dialog-title">
+													{"Do you want to delete this entry?"}
+												</DialogTitle>
+												<DialogActions>
+													<Button onClick={handleClose}>Disagree</Button>
+													<Button onClick={() => deleteUser(client._id)} style={{ color: 'red' }} autoFocus>Agree</Button>
+												</DialogActions>
+											</Dialog>
+											&nbsp;
+												<Link style={{ color:'black' }} to={`/bookings/${client._id}`}><AddBoxIcon/></Link>
+											&nbsp;
+												<Link style={{ color:'blue' }} to={`/bookings-detail/${client._id}`}><VisibilityIcon/></Link>
+										</td>
 
-										&nbsp;
-										<Button
+									</tr>
 
-											variant="outlined" startIcon={<BookIcon />}
-										>
-											<Link style={{ textDecoration: 'none' }} to={`/bookings/${client._id}`}>Booking</Link>
-										</Button>
-										&nbsp;
-										<Button
-											variant="outlined" startIcon={<VisibilityIcon />}
-										>
-											<Link style={{ textDecoration: 'none' }} to={`/bookings-detail/${client._id}`}>View-Bookings</Link>
-										</Button>
-									</td>
+								</tbody>
+							))
+						}
+					</table>
+				</Paper>
 
-								</tr>
-
-							</tbody>
-						))
-					}
-				</table>
-
-				<br />
+			</div>
+			{/* Pagination Controller*/}
+			<div style={{ textAlign: 'center' }}>
+				{/* Pagination <Button style={{ backgroundColor: '#4169E1' }} variant="contained" size="small" onClick={gotoPrevious}><NavigateBeforeRoundedIcon /></Button> */}
+				<Link onClick={gotoPrevious}><NavigateBeforeRoundedIcon /></Link>
+				&nbsp;
+				{pages.map((pageIndex) => (
+					<Button size="small" variant="outlined" style={{ color: 'black', backgroundColor: '#DADDE2', borderRadius: '50%', fontWeight: 'bold', margin: '2px' }} key={pageIndex} onClick={() => setPageNumber(pageIndex)}>
+						{pageIndex + 1}
+					</Button>
+				))}
+				&nbsp;
+				{/* Pagination  <Button style={{ backgroundColor: '#4169E1' }} variant="contained" size="small" onClick={gotoNext}><NavigateNextRoundedIcon /></Button> */}
+				<Link onClick={gotoNext}><NavigateNextRoundedIcon /></Link>
 				{/* Pagination Controller*/}
-				<div style={{ textAlign: 'center' }}>
-					{/* Pagination <Button style={{ backgroundColor: '#4169E1' }} variant="contained" size="small" onClick={gotoPrevious}><NavigateBeforeRoundedIcon /></Button> */}
-					<Link onClick={gotoPrevious}><NavigateBeforeRoundedIcon /></Link>
-					&nbsp;
-					{pages.map((pageIndex) => (
-						<Button size="small" variant="outlined" style={{ color: 'white', backgroundColor: '#677381', borderRadius: 10, fontWeight: 'bold', margin: '2px' }} key={pageIndex} onClick={() => setPageNumber(pageIndex)}>
-							{pageIndex + 1}
-						</Button>
-					))}
-					&nbsp;
-					{/* Pagination  <Button style={{ backgroundColor: '#4169E1' }} variant="contained" size="small" onClick={gotoNext}><NavigateNextRoundedIcon /></Button> */}
-					<Link onClick={gotoNext}><NavigateNextRoundedIcon /></Link>
-					{/* Pagination Controller*/}
-				</div>
 			</div>
 			<ToastContainer
 				position="top-right"
-				autoClose={2000}
+				autoClose={1000}
 				hideProgressBar={false}
 				newestOnTop={false}
 				closeOnClick

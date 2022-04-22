@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import Popup from 'reactjs-popup';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import NavigateNextRoundedIcon from '@mui/icons-material/NavigateNextRounded';
 import NavigateBeforeRoundedIcon from '@mui/icons-material/NavigateBeforeRounded';
-import BookIcon from '@mui/icons-material/Book';
-import { Dialog, DialogActions, DialogTitle, Button, } from '@mui/material';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import { Dialog, DialogActions, DialogTitle, Button, Paper } from '@mui/material';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { Link } from "react-router-dom";
 import { format } from 'date-fns';
@@ -20,30 +19,30 @@ const BookingsDetail = () => {
     //Edit Booking Dialog
     const [editopen, setEditOpen] = React.useState(false);
     const [selectedValue, setSelectedValue] = React.useState();
-        //popup updatebooking form handleinput
-        const [item, setItem] = useState({
-            name: '', model: '', perdayrent: '', phone: '', fromdate: '', todate: ''
-        });
-    
-        let name, value;
-        const handleInput = (e) => {
-            name = e.target.name;
-            value = e.target.value;
-            setItem({ ...item, [name]: value });
-        }
+    //popup updatebooking form handleinput
+    const [item, setItem] = useState({
+        name: '', model: '', perdayrent: '', phone: '', fromdate: '', todate: ''
+    });
 
-        const handleEditClickOpen = (value) => {
-            setEditOpen(true);
-            //console.log('booking ki value ' + value)
-            setSelectedValue(value)
-            //populating updateform
-            setItem(value)
-        };
-    
-        const handleEditClose = (value) => {
-            setEditOpen(false);
-            fetchData()
-        };
+    let name, value;
+    const handleInput = (e) => {
+        name = e.target.name;
+        value = e.target.value;
+        setItem({ ...item, [name]: value });
+    }
+
+    const handleEditClickOpen = (value) => {
+        setEditOpen(true);
+        //console.log('booking ki value ' + value)
+        setSelectedValue(value)
+        //populating updateform
+        setItem(value)
+    };
+
+    const handleEditClose = (value) => {
+        setEditOpen(false);
+        fetchData()
+    };
 
     //confirm del dialog
     const [open, setOpen] = React.useState(false);
@@ -116,89 +115,85 @@ console.log(total);
     return (
 
         <>
-            <div style={{ backgroundColor: '#E2E2E2', height: '90vh' }}>
+            <div style={{ height: '85vh' }}>
                 {/* Page# header <h5 style={{textAlign:'center'}}>PAGE # {pageNumber + 1}</h5> */}
-                <table class="table table-bordered">
-                    <thead style={{ backgroundColor: '#677381', color: 'white' }}>
-                        <tr>
+                <Paper elevation={2}>
+                    <h1 style={{ textAlign: 'center' }}>Specific Bookings </h1>
+                    <div style={{textAlign:'right'}}>
+                    <Button style={{color:'black'}} startIcon={<AddBoxIcon />} variant="outlined"><Link style={{textDecoration:'none', color:'black', fontWeight:'bold'}} to={`/bookings/${id.id}`}>AddBooking</Link></Button>
+                     </div>
+                    <table class="table table-bordered">
+                        <thead style={{ backgroundColor: '#677381', color: 'white' }}>
+                            <tr>
 
-                            <th scope="col">ClientName</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">CarName</th>
-                            <th scope="col">Model</th>
-                            <th scope="col">Phone</th>
-                            <th scope="col">PerDayRent</th>
-                            <th scope="col">FromDate</th>
-                            <th scope="col">ToDate</th>
-                            <th scope="col">TotalRent</th>
-                            <th scope="col">Update / Delete</th>
-                        </tr>
-                    </thead>
-                    {
-                        bookings.map((booking, count) => (
-                            <tbody>
-                                <tr key={booking._id}>
+                                <th scope="col">ClientName</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">CarName</th>
+                                <th scope="col">Model</th>
+                                <th scope="col">Phone</th>
+                                <th scope="col">PerDayRent</th>
+                                <th scope="col">FromDate</th>
+                                <th scope="col">ToDate</th>
+                                <th scope="col">TotalRent</th>
+                                <th scope="col">Operations</th>
+                            </tr>
+                        </thead>
+                        {
+                            bookings.map((booking, count) => (
+                                <tbody>
+                                    <tr key={booking._id}>
 
-                                    <td >{booking.clientsId.name}</td>
-                                    <td >{booking.clientsId.email}</td>
-                                    <td >{booking.name}</td>
-                                    <td >{booking.model}</td>
-                                    <td >{booking.phone}</td>
-                                    <td >{booking.perdayrent}</td>
-                                    <td >{format(new Date(booking.fromdate), "MMMM do, yyyy ")}</td>
-                                    <td >{format(new Date(booking.todate), "MMMM do, yyyy ")}</td>
-                                    <td >{diffDays(new Date(booking.fromdate), new Date(booking.todate)) * (booking.perdayrent)}</td>
-                                    <td>
-                                        <Button onClick={() => handleEditClickOpen(booking)} style={{ backgroundColor: '#4169E1', color: '#FFFFFF' }} variant="contained" ><EditIcon /></Button>
-                                        &nbsp;
-                                        <Button style={{ color: 'red' }} variant="outlined" startIcon={<DeleteIcon style={{ color: 'red' }} />} onClick={handleClickOpen}>
-                                            Delete
-                                        </Button>
-                                        <Dialog
-                                            open={open}
-                                            onClose={handleClose}
-                                            aria-labelledby="alert-dialog-title"
-                                            aria-describedby="alert-dialog-description"
-                                        >
-                                            <DialogTitle id="alert-dialog-title">
-                                                {"Do you want to delete this entry?"}
-                                            </DialogTitle>
-                                            <DialogActions>
-                                                <Button onClick={handleClose}>Disagree</Button>
-                                                <Button onClick={() => deleteUser(booking._id)} style={{ color: 'red' }} autoFocus>Agree</Button>
-                                            </DialogActions>
-                                        </Dialog>
-
-                                        &nbsp;
-                                        <Button
-
-                                            variant="outlined" startIcon={<BookIcon />}
-                                        >
-                                            <Link style={{ textDecoration: 'none' }} to={`/bookings/${id.id}`}>Booking</Link>
-                                        </Button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        ))
-                    }
-                </table>
-
-                <br />
+                                        <td >{booking.clientsId.name}</td>
+                                        <td >{booking.clientsId.email}</td>
+                                        <td >{booking.name}</td>
+                                        <td >{booking.model}</td>
+                                        <td >{booking.phone}</td>
+                                        <td >{booking.perdayrent}</td>
+                                        <td >{format(new Date(booking.fromdate), "MMMM do, yyyy ")}</td>
+                                        <td >{format(new Date(booking.todate), "MMMM do, yyyy ")}</td>
+                                        <td >{diffDays(new Date(booking.fromdate), new Date(booking.todate)) * (booking.perdayrent)}</td>
+                                        <td>
+                                            <Link onClick={() => handleEditClickOpen(booking)} style={{ color: 'black' }} ><EditIcon /></Link>
+                                            &nbsp;
+                                            <Link style={{ color: 'red' }} onClick={handleClickOpen}>
+                                                <DeleteIcon />
+                                            </Link>
+                                            <Dialog
+                                                open={open}
+                                                onClose={handleClose}
+                                                aria-labelledby="alert-dialog-title"
+                                                aria-describedby="alert-dialog-description"
+                                            >
+                                                <DialogTitle id="alert-dialog-title">
+                                                    {"Do you want to delete this entry?"}
+                                                </DialogTitle>
+                                                <DialogActions>
+                                                    <Button onClick={handleClose}>Disagree</Button>
+                                                    <Button onClick={() => deleteUser(booking._id)} style={{ color: 'red' }} autoFocus>Agree</Button>
+                                                </DialogActions>
+                                            </Dialog>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            ))
+                        }
+                    </table>
+                </Paper>
+            </div>
+            {/* Pagination Controller*/}
+            <div style={{ textAlign: 'center' }}>
+                {/* Pagination <Button style={{ backgroundColor: '#4169E1' }} variant="contained" size="small" onClick={gotoPrevious}><NavigateBeforeRoundedIcon /></Button> */}
+                <Link onClick={gotoPrevious}><NavigateBeforeRoundedIcon /></Link>
+                &nbsp;
+                {pages.map((pageIndex) => (
+                    <Button size="small" variant="outlined" style={{ color: 'black', backgroundColor: '#DADDE2', borderRadius: '50%', fontWeight: 'bold', margin: '2px' }} key={pageIndex} onClick={() => setPageNumber(pageIndex)}>
+                        {pageIndex + 1}
+                    </Button>
+                ))}
+                &nbsp;
+                {/* Pagination  <Button style={{ backgroundColor: '#4169E1' }} variant="contained" size="small" onClick={gotoNext}><NavigateNextRoundedIcon /></Button> */}
+                <Link onClick={gotoNext}><NavigateNextRoundedIcon /></Link>
                 {/* Pagination Controller*/}
-                <div style={{ textAlign: 'center' }}>
-                    {/* Pagination <Button style={{ backgroundColor: '#4169E1' }} variant="contained" size="small" onClick={gotoPrevious}><NavigateBeforeRoundedIcon /></Button> */}
-                    <Link onClick={gotoPrevious}><NavigateBeforeRoundedIcon /></Link>
-                    &nbsp;
-                    {pages.map((pageIndex) => (
-                        <Button size="small" variant="outlined" style={{ color: 'white', backgroundColor: '#677381', borderRadius: 10, fontWeight: 'bold', margin: '2px' }} key={pageIndex} onClick={() => setPageNumber(pageIndex)}>
-                            {pageIndex + 1}
-                        </Button>
-                    ))}
-                    &nbsp;
-                    {/* Pagination  <Button style={{ backgroundColor: '#4169E1' }} variant="contained" size="small" onClick={gotoNext}><NavigateNextRoundedIcon /></Button> */}
-                    <Link onClick={gotoNext}><NavigateNextRoundedIcon /></Link>
-                    {/* Pagination Controller*/}
-                </div>
             </div>
             <ToastContainer
                 position="top-right"

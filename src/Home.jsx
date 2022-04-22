@@ -6,7 +6,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import NavigateNextRoundedIcon from '@mui/icons-material/NavigateNextRounded';
 import NavigateBeforeRoundedIcon from '@mui/icons-material/NavigateBeforeRounded';
-import { Dialog, DialogActions,DialogTitle, Button } from '@mui/material';
+import { Dialog, DialogActions, DialogTitle, Button,Paper  } from '@mui/material';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { Link } from "react-router-dom";
 //toast
@@ -19,17 +19,17 @@ const HomePage = () => {
     const [editopen, setEditOpen] = React.useState(false);
     const [selectedValue, setSelectedValue] = React.useState();
 
-//popup form handleinput
-const [item, setItem] = useState({
-    firstname: '', lastname: '', email: '', password: '', cpassword: ''
-});
+    //popup form handleinput
+    const [item, setItem] = useState({
+        firstname: '', lastname: '', email: '', password: '', cpassword: ''
+    });
 
-let name, value;
-const handleInput = (e) => {
-    name = e.target.name;
-    value = e.target.value;
-    setItem({ ...item, [name]: value });
-}
+    let name, value;
+    const handleInput = (e) => {
+        name = e.target.name;
+        value = e.target.value;
+        setItem({ ...item, [name]: value });
+    }
 
     const handleEditClickOpen = (value) => {
         setEditOpen(true);
@@ -102,8 +102,10 @@ const handleInput = (e) => {
     return (
 
         <>
-            <div style={{ backgroundColor: '#E2E2E2', height: '90vh' }}>
+            <div style={{ height: '85vh' }}>
                 {/* Page# header <h5 style={{textAlign:'center'}}>PAGE # {pageNumber + 1}</h5> */}
+                <Paper elevation={2}>
+                <h1 style={{textAlign:'center'}} >All Users</h1>
                 <table class="table table-bordered">
                     <thead style={{ backgroundColor: '#677381', color: 'white' }}>
                         <tr>
@@ -111,7 +113,7 @@ const handleInput = (e) => {
                             <th scope="col">FirstName</th>
                             <th scope="col">LastName</th>
                             <th scope="col">Email</th>
-                            <th scope="col">Edit / Delete</th>
+                            <th scope="col">Operations</th>
                         </tr>
                     </thead>
                     {
@@ -122,11 +124,11 @@ const handleInput = (e) => {
                                     <td >{user.lastname}</td>
                                     <td >{user.email}</td>
                                     <td>
-                                        <Button onClick={() => handleEditClickOpen(user)} style={{ backgroundColor: '#4169E1', color: '#FFFFFF' }} variant="contained" ><EditIcon /></Button>
+                                        <Link style={{color:'black'}} onClick={() => handleEditClickOpen(user)} ><EditIcon/></Link>
                                         &nbsp;
-                                        <Button style={{ color: 'red' }} variant="outlined" startIcon={<DeleteIcon style={{ color: 'red' }} />} onClick={handleClickOpen}>
-                                            Delete
-                                        </Button>
+                                        <Link style={{ color: 'red' }} onClick={handleClickOpen}>
+                                            <DeleteIcon/>
+                                        </Link>
                                         <Dialog
                                             open={open}
                                             onClose={handleClose}
@@ -142,35 +144,29 @@ const handleInput = (e) => {
                                             </DialogActions>
                                         </Dialog>
                                         &nbsp;
-                                        <Button
-                                            variant="outlined" startIcon={<VisibilityIcon />}
-                                        >
-                                            <Link style={{ textDecoration: 'none' }} to={`/clients-detail/${user._id}`}>View-Clients</Link>
-                                        </Button>
-
+                                            <Link style={{ color:'blue' }} to={`/clients-detail/${user._id}`}><VisibilityIcon/></Link>
                                     </td>
                                 </tr>
                             </tbody>
                         ))
                     }
                 </table>
-
-                <br />
+                </Paper>
+            </div>
+            {/* Pagination Controller*/}
+            <div style={{ textAlign: 'center' }}>
+                {/* Pagination <Button style={{ backgroundColor: '#4169E1' }} variant="contained" size="small" onClick={gotoPrevious}><NavigateBeforeRoundedIcon /></Button> */}
+                <Link onClick={gotoPrevious}><NavigateBeforeRoundedIcon /></Link>
+                &nbsp;
+                {pages.map((pageIndex) => (
+                    <Button size="small" variant="outlined" style={{ color: 'black', backgroundColor: '#DADDE2', borderRadius: '50%', fontWeight: 'bold', margin: '2px' }} key={pageIndex} onClick={() => setPageNumber(pageIndex)}>
+                        {pageIndex + 1}
+                    </Button>
+                ))}
+                &nbsp;
+                {/* Pagination  <Button style={{ backgroundColor: '#4169E1' }} variant="contained" size="small" onClick={gotoNext}><NavigateNextRoundedIcon /></Button> */}
+                <Link onClick={gotoNext}><NavigateNextRoundedIcon /></Link>
                 {/* Pagination Controller*/}
-                <div style={{ textAlign: 'center' }}>
-                    {/* Pagination <Button style={{ backgroundColor: '#4169E1' }} variant="contained" size="small" onClick={gotoPrevious}><NavigateBeforeRoundedIcon /></Button> */}
-                    <Link onClick={gotoPrevious}><NavigateBeforeRoundedIcon /></Link>
-                    &nbsp;
-                    {pages.map((pageIndex) => (
-                        <Button size="small" variant="outlined" style={{ color: 'white', backgroundColor: '#677381', borderRadius: 10, fontWeight: 'bold', margin: '2px' }} key={pageIndex} onClick={() => setPageNumber(pageIndex)}>
-                            {pageIndex + 1}
-                        </Button>
-                    ))}
-                    &nbsp;
-                    {/* Pagination  <Button style={{ backgroundColor: '#4169E1' }} variant="contained" size="small" onClick={gotoNext}><NavigateNextRoundedIcon /></Button> */}
-                    <Link onClick={gotoNext}><NavigateNextRoundedIcon /></Link>
-                    {/* Pagination Controller*/}
-                </div>
             </div>
             <ToastContainer
                 position="top-right"

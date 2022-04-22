@@ -5,7 +5,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import NavigateNextRoundedIcon from '@mui/icons-material/NavigateNextRounded';
 import NavigateBeforeRoundedIcon from '@mui/icons-material/NavigateBeforeRounded';
-import { Dialog, DialogActions, DialogTitle, Button } from '@mui/material';
+import { Dialog, DialogActions, DialogTitle, Button ,Paper} from '@mui/material';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { Link } from "react-router-dom";
 import { format } from 'date-fns';
@@ -112,8 +112,10 @@ console.log(total);
     return (
 
         <>
-            <div style={{ backgroundColor: '#E2E2E2', height: '90vh' }}>
+            <div style={{ height: '85vh' }}>
                 {/* Page# header <h5 style={{textAlign:'center'}}>PAGE # {pageNumber + 1}</h5> */}
+                <Paper elevation={2}>
+                <h1 style={{textAlign:'center'}} >All Bookings</h1>
                 <table class="table table-bordered">
                     <thead style={{ backgroundColor: '#677381', color: 'white' }}>
                         <tr>
@@ -124,7 +126,7 @@ console.log(total);
                             <th scope="col">FromDate</th>
                             <th scope="col">ToDate</th>
                             <th scope="col">TotalRent</th>
-                            <th scope="col">Update / Delete</th>
+                            <th scope="col">Operations</th>
                         </tr>
                     </thead>
                     {
@@ -139,11 +141,11 @@ console.log(total);
                                     <td >{format(new Date(booking.todate), "MMMM do, yyyy ")}</td>
                                     <td >{diffDays(new Date(booking.fromdate), new Date(booking.todate)) * (booking.perdayrent)}</td>
                                     <td>
-                                        <Button onClick={() => handleEditClickOpen(booking)} style={{ backgroundColor: '#4169E1', color: '#FFFFFF' }} variant="contained" ><EditIcon /></Button>
+                                        <Link onClick={() => handleEditClickOpen(booking)} style={{ color: 'black' }}><EditIcon /></Link>
                                         &nbsp;
-                                        <Button style={{ color: 'red' }} variant="outlined" startIcon={<DeleteIcon style={{ color: 'red' }} />} onClick={handleClickOpen}>
-                                            Delete
-                                        </Button>
+                                        <Link style={{ color: 'red' }} onClick={handleClickOpen}>
+                                            <DeleteIcon/>
+                                        </Link>
                                         <Dialog
                                             open={open}
                                             onClose={handleClose}
@@ -164,15 +166,16 @@ console.log(total);
                         ))
                     }
                 </table>
-
-                <br />
-                {/* Pagination Controller*/}
-                <div style={{ textAlign: 'center' }}>
+                </Paper>
+                
+            </div>
+                            {/* Pagination Controller*/}
+                            <div style={{ textAlign: 'center' }}>
                     {/* Pagination <Button style={{ backgroundColor: '#4169E1' }} variant="contained" size="small" onClick={gotoPrevious}><NavigateBeforeRoundedIcon /></Button> */}
                     <Link onClick={gotoPrevious}><NavigateBeforeRoundedIcon /></Link>
                     &nbsp;
                     {pages.map((pageIndex) => (
-                        <Button size="small" variant="outlined" style={{ color: 'white', backgroundColor: '#677381', borderRadius: 10, fontWeight: 'bold', margin: '2px' }} key={pageIndex} onClick={() => setPageNumber(pageIndex)}>
+                        <Button size="small" variant="outlined" style={{ color: 'black', backgroundColor: '#DADDE2', borderRadius: '50%', fontWeight: 'bold', margin: '2px' }} key={pageIndex} onClick={() => setPageNumber(pageIndex)}>
                             {pageIndex + 1}
                         </Button>
                     ))}
@@ -181,7 +184,6 @@ console.log(total);
                     <Link onClick={gotoNext}><NavigateNextRoundedIcon /></Link>
                     {/* Pagination Controller*/}
                 </div>
-            </div>
             <ToastContainer
                 position="top-right"
                 autoClose={2000}
