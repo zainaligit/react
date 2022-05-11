@@ -11,8 +11,14 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const AddClients = () => {
+    const [verify, setVerify] = useState()
     const history = useHistory()
+    const [show, setShow] = useState(false)
     const [quote, setQuote] = useState('')
+    const [secret, setSecret] = useState([])
+    const [user, setUser] = useState({
+        token: '', secretKey: ''
+    });
 
     async function populateQuote() {
         const res = await fetch('http://localhost:5000/clients-detail', {
@@ -34,7 +40,7 @@ const AddClients = () => {
         if (token) {
             //console.log(token)
             const user = jwt_decode(token)
-            console.log(quote)
+            //console.log(quote)
             populateQuote();
         }
     }, [])
@@ -50,6 +56,48 @@ const AddClients = () => {
 
         setClient({ ...client, [name]: value });
         checkValidation();
+    }
+
+    const handleInputOtp = (e) => {
+
+        name = e.target.name;
+        value = e.target.value;
+
+        setUser({ ...user, [name]: value });
+        getSecret()
+
+    }
+
+    //get secret from db
+    const getSecret = async () => {
+        let id = quote;
+        const response = await fetch(`http://localhost:5000/otpfromdb/${id}`);
+        const data = await response.json();
+        setSecret(data.secret)
+        console.log(secret)
+    }
+
+    //verify otp
+    const verifyOtp = async (e) => {
+        e.preventDefault();
+        const { token } = user;
+        let secretKey = secret;
+        const res = await fetch('http://localhost:5000/verifyformsotp', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ token: token, secretKey: secretKey })
+        });
+        const data = await res.json();
+        if (!token) {
+            toast.error('plzz enter otp')
+        } else if (data.error) {
+            toast.error(data.error)
+        } else {
+            toast.success('Otp Verified Successfully')
+            setShow(!show)
+        }
     }
 
     const postData = async (e) => {
@@ -68,7 +116,6 @@ const AddClients = () => {
                 },
                 body: JSON.stringify({ name: name, email: email, phone: phone, adress: adress, state: state, city: city, users: users })
             });
-            
             toast.success('Client added')
             setClient('');
 
@@ -76,7 +123,6 @@ const AddClients = () => {
                 history.push('/clientsdetail')
             }, 1000);
         }
-
     }
 
     //form validation
@@ -86,7 +132,6 @@ const AddClients = () => {
     });
     const checkValidation = () => {
         let errors = validation;
-
         // email validation
         const emailCond = "[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$";
         if (!client.email.trim()) {
@@ -99,29 +144,29 @@ const AddClients = () => {
 
         //phone validation
         var phone = '1234567890';
-        if( !client.phone.match('[0-9]{10}') ){
-             errors.phone = 'Please provide valid phone number';
-        }else{
-             errors.phone = '';
+        if (!client.phone.match('[0-9]{10}')) {
+            errors.phone = 'Please provide valid phone number';
+        } else {
+            errors.phone = '';
         }
-
         setValidation(errors);
     };
-/*
-    useEffect(() => {
-        checkValidation();
-    }, [client]);
-*/
+    /*
+        useEffect(() => {
+            checkValidation();
+        }, [client]);
+    */
     //
 
     return (
         <>
+        
             <div style={{ backgroundColor: '#E2E2E2', height: '100vh' }}>
                 <br />
                 <p>{/**Logged in... {quote || 'Unknown User'} */}</p>
                 <Grid>
                     <Paper elevation={10} style={{ padding: 20, width: 400, height: '90vh', margin: '20px auto' }}>
-                    <div style={{textAlign:'right'}} ><Link style={{ color:'red' }} to={`/`}><CancelIcon/></Link></div>
+                        <div style={{ textAlign: 'right' }} ><Link style={{ color: 'red' }} to={`/`}><CancelIcon /></Link></div>
                         <Grid align='center'>
                             <Avatar style={{ backgroundColor: '#4169E1' }}><AccessibilityNewIcon /></Avatar>
                         </Grid>
@@ -148,7 +193,7 @@ const AddClients = () => {
                                 label="Email"
                                 variant="outlined"
                             />
-                           {validation.email && <p>&nbsp;{validation.email}</p>}
+                            {validation.email && <p>&nbsp;{validation.email}</p>}
                             <TextField
                                 required
                                 onChange={handleInput}
@@ -194,15 +239,36 @@ const AddClients = () => {
                                 variant="outlined"
                             />
                             <br />
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                type="submit"
-                                onClick={postData}
+                            <TextField
+                                name='token'
+                                onChange={handleInputOtp}
+                                value={user.token}
                                 style={{ width: "350px", margin: "5px" }}
-                            >
-                                add client
-                            </Button>
+                                type="number"
+                                label="Enter 6 digit otp"
+                                variant="outlined"
+                            />
+                            <br />
+                            {
+                                show ?
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        type="submit"
+                                        onClick={postData}
+                                        style={{ width: "350px", margin: "5px" }}
+                                    >
+                                        add client
+                                    </Button> : <Button
+                                        variant="contained"
+                                        color="primary"
+                                        type="submit"
+                                        onClick={verifyOtp}
+                                        style={{ width: "350px", margin: "5px" }}
+                                    >
+                                        Verify
+                                    </Button>
+                            }
 
                         </form>
                     </Paper>

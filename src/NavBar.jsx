@@ -1,4 +1,4 @@
-import React, {  useContext} from 'react';
+import React, { useContext } from 'react';
 import {
     BrowserRouter as Router,
     Switch,
@@ -21,6 +21,7 @@ import BookingsDetail from './ShowBookings';
 import AllClients from './AllClients';
 import AllBookings from './AllBookings';
 import { UserContext } from './App';
+import Otp from './VarifyOtp';
 
 //after login
 //const pages = ['clientsdetail', 'bookingsdetail', 'addclients'];
@@ -121,6 +122,9 @@ const NavBar = () => {
                                             <Button sx={{ my: 2, color: 'brown', display: 'block' }}>
                                                 <Link style={{ color: '#FFEF00', textDecoration: 'none' }} to="/bookingsdetail">BookingsDetail</Link>
                                             </Button>
+                                            <Button sx={{ my: 2, color: 'brown', display: 'block' }}>
+                                                <Link style={{ color: '#FFEF00', textDecoration: 'none' }} to="/otp">2FA</Link>
+                                            </Button>
                                         </Menu>
                                     </Box>
                                     <Typography
@@ -145,6 +149,9 @@ const NavBar = () => {
                                         <Button sx={{ my: 2, color: 'brown', display: 'block' }}>
                                             <Link style={{ color: '#FFEF00', textDecoration: 'none' }} to="/bookingsdetail">BookingsDetail</Link>
                                         </Button>
+                                        <Button sx={{ my: 2, color: 'brown', display: 'block' }}>
+                                            <Link style={{ color: '#FFEF00', textDecoration: 'none' }} to="/otp">2FA</Link>
+                                        </Button>
                                         {/*
                                         {pages.map((page) => (
                                             <Button
@@ -160,8 +167,8 @@ const NavBar = () => {
 
                                         {/* Appbar Button Items / yahi pa oor links ay gy*/}
                                     </Box>
-                                    <Link onClick={logoutUser} style={{ color: '#E8A392', textDecoration: 'none' }} to={`/login`}><LogoutIcon fontSize = 'small'/></Link>
-                                    
+                                    <Link onClick={logoutUser} style={{ color: '#E8A392', textDecoration: 'none' }} to={`/login`}><LogoutIcon fontSize='small' /></Link>
+
                                 </Toolbar>
                             </Container>
                         </AppBar>
@@ -190,6 +197,9 @@ const NavBar = () => {
                             </Route>
                             <Route path='/Logout'>
                                 <Logout />
+                            </Route>
+                            <Route path='/otp'>
+                                <Otp />
                             </Route>
                             <Route>
                                 <ErrorPage />{/* if you go on wrong address */}
@@ -275,6 +285,7 @@ const NavBar = () => {
                         <Route path='/login'>
                             <Login />
                         </Route>
+
                         <Route>
                             <ErrorPage />{/* if you go on wrong address */}
                         </Route>
