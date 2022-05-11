@@ -36,10 +36,11 @@ const NavBar = () => {
 
     const logoutUser = () => {
         localStorage.removeItem('token');
+        localStorage.removeItem('verified');
         dispatch({ type: "USER", payload: false })
     }
 
-    const RenderMenu = () => {
+    const RenderMenu = () => { 
 
         const [anchorElNav, setAnchorElNav] = React.useState(null);
         const [anchorElUser, setAnchorElUser] = React.useState(null);
