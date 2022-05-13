@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import {
     BrowserRouter as Router,
     Switch,
@@ -22,6 +22,7 @@ import AllClients from './AllClients';
 import AllBookings from './AllBookings';
 import { UserContext } from './App';
 import Otp from './VarifyOtp';
+import jwt_decode from "jwt-decode";
 
 //after login
 //const pages = ['clientsdetail', 'bookingsdetail', 'addclients'];
@@ -31,16 +32,43 @@ const settings = ['Profile'];
 //const hiddensettings = ['Profile'];
 
 const NavBar = () => {
-
+    const [quote, setQuote] = useState('')
     const { state, dispatch } = useContext(UserContext);
 
-    const logoutUser = () => {
+    async function populateQuote() {
+        const res = await fetch('http://localhost:5000/clients-detail', {
+            headers: {
+                'x-access-token': localStorage.getItem('token'),
+            },
+        })
+        const data = await res.json()
+        if (data.status === 'ok') {
+            setQuote(data.quote)
+        } else {
+            alert(data.error)
+        }
+    }
+
+    useEffect(() => {
+        const token = localStorage.getItem('token')
+        if (token) {
+            const user = jwt_decode(token)
+            populateQuote();
+        }
+    }, [])
+
+    const logoutUser = async () => {
         localStorage.removeItem('token');
         localStorage.removeItem('verified');
         dispatch({ type: "USER", payload: false })
+
+        const id = quote;
+        const res = await fetch(`http://localhost:5000/deltwofa/${id}`, {
+            method: 'DELETE'
+        })
     }
 
-    const RenderMenu = () => { 
+    const RenderMenu = () => {
 
         const [anchorElNav, setAnchorElNav] = React.useState(null);
         const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -60,6 +88,8 @@ const NavBar = () => {
         const handleCloseUserMenu = () => {
             setAnchorElUser(null);
         };
+
+        const twoFa = localStorage.getItem('verified')
 
         if (state) {
             return (
@@ -123,9 +153,10 @@ const NavBar = () => {
                                             <Button sx={{ my: 2, color: 'brown', display: 'block' }}>
                                                 <Link style={{ color: '#FFEF00', textDecoration: 'none' }} to="/bookingsdetail">BookingsDetail</Link>
                                             </Button>
-                                            <Button sx={{ my: 2, color: 'brown', display: 'block' }}>
+                                            {twoFa ? null : <Button sx={{ my: 2, color: 'brown', display: 'block' }}>
                                                 <Link style={{ color: '#FFEF00', textDecoration: 'none' }} to="/otp">2FA</Link>
-                                            </Button>
+                                            </Button>}
+
                                         </Menu>
                                     </Box>
                                     <Typography
@@ -150,9 +181,10 @@ const NavBar = () => {
                                         <Button sx={{ my: 2, color: 'brown', display: 'block' }}>
                                             <Link style={{ color: '#FFEF00', textDecoration: 'none' }} to="/bookingsdetail">BookingsDetail</Link>
                                         </Button>
-                                        <Button sx={{ my: 2, color: 'brown', display: 'block' }}>
+                                        {twoFa ? null : <Button sx={{ my: 2, color: 'brown', display: 'block' }}>
                                             <Link style={{ color: '#FFEF00', textDecoration: 'none' }} to="/otp">2FA</Link>
-                                        </Button>
+                                        </Button>}
+
                                         {/*
                                         {pages.map((page) => (
                                             <Button
